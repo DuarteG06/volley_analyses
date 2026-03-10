@@ -128,13 +128,13 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
 
       <div className="scoreboard">
         <div className={`team-score ${servingTeam === 'us' ? 'serving' : ''}`}>
-          <span className="team-name">OUR TEAM</span>
+          <span className="team-name">{match.ourTeamName}</span>
           <span className="score-value">{currentSet.ourScore}</span>
           {servingTeam === 'us' && <div className="serving-dot">● SERVING</div>}
         </div>
         <div className="score-divider">:</div>
         <div className={`team-score ${servingTeam === 'opponent' ? 'serving' : ''}`}>
-          <span className="team-name">OPPONENT</span>
+          <span className="team-name">{match.opponentTeamName}</span>
           <span className="score-value">{currentSet.opponentScore}</span>
           {servingTeam === 'opponent' && <div className="serving-dot">● SERVING</div>}
         </div>
@@ -142,10 +142,10 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
 
       <div className="action-buttons">
         <button className="point-button our-point" onClick={() => handlePointScored('us')}>
-          OUR POINT
+          POINT {match.ourTeamName}
         </button>
         <button className="point-button opponent-point" onClick={() => handlePointScored('opponent')}>
-          OPPONENT POINT
+          POINT {match.opponentTeamName}
         </button>
       </div>
 

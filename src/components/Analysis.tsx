@@ -32,6 +32,13 @@ interface Props {
 const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   const [viewSetIndex, setViewSetIndex] = useState<number | 'all'>('all');
 
+  const isMatchOver = useMemo(() => {
+    const ourSetsWon = match.sets.filter(s => s.finished && s.ourScore > s.opponentScore).length;
+    const opponentSetsWon = match.sets.filter(s => s.finished && s.opponentScore > s.ourScore).length;
+    const setsToWin = match.type === '3set' ? 2 : 3;
+    return ourSetsWon === setsToWin || opponentSetsWon === setsToWin;
+  }, [match.sets, match.type]);
+
   const selectedEvents = useMemo(() => {
     if (viewSetIndex === 'all') {
       return match.sets.flatMap(s => s.events);
@@ -161,7 +168,14 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   return (
     <div className="analysis-container">
       <header className="analysis-header">
-        <h1>Match Analysis</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {!isMatchOver && (
+            <button className="icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title="Back to Match">
+              <ChevronLeft size={24} />
+            </button>
+          )}
+          <h1>Match Analysis</h1>
+        </div>
         <div className="header-actions">
           <button className="secondary" onClick={downloadJson}>
             <Download size={18} /> Export JSON
@@ -195,12 +209,12 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           <h3>Summary</h3>
           <div className="score-display">
             <div className="team">
-              <span className="name">US</span>
+              <span className="name">{match.ourTeamName}</span>
               <span className="val">{stats.ourPoints}</span>
             </div>
             <div className="div">:</div>
             <div className="team">
-              <span className="name">THEM</span>
+              <span className="name">{match.opponentTeamName}</span>
               <span className="val">{stats.opponentPoints}</span>
             </div>
           </div>
@@ -288,7 +302,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
         </div>
       </div>
       
-      {match.status === 'playing' && (
+      {!isMatchOver && (
         <button className="primary-large" onClick={() => onUpdate({ ...match, status: 'playing' })}>
           <ChevronLeft size={18} /> Resume Match
         </button>

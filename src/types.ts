@@ -47,4 +47,6 @@ export interface MatchData {
   currentSetIndex: number;
   status: 'setup' | 'playing' | 'finished';
   initialServer: Team;
+  ourTeamName: string;
+  opponentTeamName: string;
 }

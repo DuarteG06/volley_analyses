@@ -19,13 +19,15 @@ function App() {
     }
   }, [match]);
 
-  const startNewMatch = (type: MatchType, initialServer: Team) => {
+  const startNewMatch = (type: MatchType, initialServer: Team, ourTeamName: string, opponentTeamName: string) => {
     const newMatch: MatchData = {
       id: Date.now().toString(),
       type,
       status: 'playing',
       currentSetIndex: 0,
       initialServer,
+      ourTeamName,
+      opponentTeamName,
       sets: [{ ourScore: 0, opponentScore: 0, events: [], finished: false }],
     };
     setMatch(newMatch);
