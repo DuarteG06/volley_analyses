@@ -59,8 +59,7 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
     updatedMatch.sets[match.currentSetIndex] = updatedSet;
 
     // Check if set is finished
-    const targetScore = (match.type === '3set' && match.currentSetIndex === 2) || 
-                         (match.type === '5set' && match.currentSetIndex === 4) ? 15 : 25;
+    const targetScore = (match.type === '5set' && match.currentSetIndex === 4) ? 15 : 25;
     
     const { ourScore, opponentScore } = updatedSet;
     const isFinished = (ourScore >= targetScore || opponentScore >= targetScore) && 
