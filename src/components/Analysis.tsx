@@ -168,22 +168,12 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   return (
     <div className="analysis-container">
       <header className="analysis-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {!isMatchOver && (
-            <button className="icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title="Back to Match">
-              <ChevronLeft size={24} />
-            </button>
-          )}
-          <h1>Match Analysis</h1>
-        </div>
-        <div className="header-actions">
-          <button className="secondary" onClick={downloadJson}>
-            <Download size={18} /> Export JSON
+        {!isMatchOver && (
+          <button className="back-button icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title="Back to Match">
+            <ChevronLeft size={24} />
           </button>
-          <button className="secondary" onClick={onReset}>
-            <RefreshCw size={18} /> New Match
-          </button>
-        </div>
+        )}
+        <h1>Match Analysis</h1>
       </header>
 
       <div className="view-selector">
@@ -202,6 +192,13 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             Set {i + 1}
           </button>
         ))}
+        <div className="view-selector-divider"></div>
+        <button className="secondary" onClick={downloadJson}>
+          <Download size={18} /> Export JSON
+        </button>
+        <button className="secondary" onClick={onReset}>
+          <RefreshCw size={18} /> New Match
+        </button>
       </div>
 
       <div className="stats-grid">
@@ -300,13 +297,13 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             </div>
           </div>
         </div>
+
+        {!isMatchOver && (
+          <button className="stat-card primary-large full-width" onClick={() => onUpdate({ ...match, status: 'playing' })}>
+            <ChevronLeft size={18} /> Resume Match
+          </button>
+        )}
       </div>
-      
-      {!isMatchOver && (
-        <button className="primary-large" onClick={() => onUpdate({ ...match, status: 'playing' })}>
-          <ChevronLeft size={18} /> Resume Match
-        </button>
-      )}
     </div>
   );
 };
