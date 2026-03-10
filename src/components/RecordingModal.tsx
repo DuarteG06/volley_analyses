@@ -17,6 +17,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
 
   const needsReceiveQuality = (reason: PointReason) => {
     // Always ask for receive quality when opponent is serving, except for aces or missed serves
+    // Aces are handled automatically as 'C' quality
     return servingTeam === 'opponent' && reason !== 'ace' && reason !== 'serve_miss';
   };
 
@@ -29,10 +30,19 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
     
     if (needsReceiveQuality(reason)) {
       setStep('receive');
-    } else if (needsExtraDetails(reason)) {
-      setStep('extra');
     } else {
-      onConfirm(reason, {});
+      const initialDetails: EventDetails = {};
+      // If it's an ace against us, it's a C pass quality
+      if (reason === 'ace' && servingTeam === 'opponent') {
+        initialDetails.receiveQuality = 'C';
+      }
+
+      if (needsExtraDetails(reason)) {
+        setDetails(initialDetails);
+        setStep('extra');
+      } else {
+        onConfirm(reason, initialDetails);
+      }
     }
   };
 

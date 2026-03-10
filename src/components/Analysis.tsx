@@ -59,12 +59,13 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     };
 
     selectedEvents.forEach(event => {
+      if (event.details.receiveQuality) {
+        s.receive[event.details.receiveQuality]++;
+      }
+
       if (event.scoringTeam === 'us') {
         s.ourPoints++;
         s.scoring[event.reason] = (s.scoring[event.reason] || 0) + 1;
-        if (event.details.receiveQuality) {
-          s.receive[event.details.receiveQuality]++;
-        }
       } else {
         s.opponentPoints++;
         s.errors[event.reason] = (s.errors[event.reason] || 0) + 1;
@@ -163,7 +164,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(match));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", `match_${match.id}.json`);
+    downloadAnchorNode.setAttribute("download", `${match.ourTeamName} vs ${match.opponentTeamName}.json`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
