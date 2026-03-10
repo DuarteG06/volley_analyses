@@ -327,6 +327,7 @@ hr {
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
+  color: #ffffff;
 }
 
 .view-selector {
@@ -354,7 +355,7 @@ hr {
 .view-selector button {
   background: #1e293b;
   border: 1px solid var(--border);
-  color: var(--secondary);
+  color: #ffffff;
   white-space: nowrap;
   padding: 0.5rem 1rem;
   flex-shrink: 0;
@@ -364,6 +365,10 @@ hr {
   background: var(--primary);
   color: #0f172a;
   border-color: var(--primary);
+}
+
+.view-selector button.secondary {
+  color: #ffffff;
 }
 
 .view-selector-divider {
@@ -394,8 +399,12 @@ hr {
 
 .stat-card h3 {
   margin-bottom: 1rem;
-  color: var(--secondary);
+  color: #ffffff;
   font-size: 1rem;
+}
+
+.stat-card p {
+  color: #ffffff;
 }
 
 .score-display {
@@ -410,6 +419,7 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #ffffff;
 }
 
 .score-display .val {
@@ -439,6 +449,7 @@ hr {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
+  color: #ffffff;
 }
 
 .primary-large {

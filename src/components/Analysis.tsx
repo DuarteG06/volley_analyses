@@ -88,6 +88,9 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     plugins: {
       legend: {
         position: 'bottom' as const,
+        labels: {
+          color: '#ffffff'
+        }
       },
       tooltip: {
         callbacks: {
@@ -103,6 +106,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
       title: {
         display: false,
         text: title,
+        color: '#ffffff'
       },
     },
   });
@@ -243,7 +247,38 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           <div className="stat-card full-width">
             <h3>Points Per Set</h3>
             <div className="chart-container bar">
-              <Bar data={pointsPerSetData} options={{ responsive: true, maintainAspectRatio: false }} />
+              <Bar 
+                data={pointsPerSetData} 
+                options={{ 
+                  responsive: true, 
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: '#ffffff'
+                      }
+                    }
+                  },
+                  scales: {
+                    x: {
+                      ticks: {
+                        color: '#ffffff'
+                      },
+                      grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                      }
+                    },
+                    y: {
+                      ticks: {
+                        color: '#ffffff'
+                      },
+                      grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                      }
+                    }
+                  }
+                }} 
+              />
             </div>
           </div>
         )}
