@@ -167,41 +167,41 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
   return (
     <div className="analysis-container">
-      <header className="analysis-header">
-        {!isMatchOver && (
-          <button className="back-button icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title="Back to Match">
-            <ChevronLeft size={24} />
-          </button>
-        )}
-        <h1>Match Analysis</h1>
-      </header>
-
-      <div className="view-selector">
-        <button 
-          className={viewSetIndex === 'all' ? 'active' : ''} 
-          onClick={() => setViewSetIndex('all')}
-        >
-          All Match
-        </button>
-        {match.sets.map((_, i) => (
-          <button 
-            key={i} 
-            className={viewSetIndex === i ? 'active' : ''} 
-            onClick={() => setViewSetIndex(i)}
-          >
-            Set {i + 1}
-          </button>
-        ))}
-        <div className="view-selector-divider"></div>
-        <button className="secondary" onClick={downloadJson}>
-          <Download size={18} /> Export JSON
-        </button>
-        <button className="secondary" onClick={onReset}>
-          <RefreshCw size={18} /> New Match
-        </button>
-      </div>
-
       <div className="stats-grid">
+        <header className="analysis-header stat-card full-width">
+          {!isMatchOver && (
+            <button className="back-button icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title="Back to Match">
+              <ChevronLeft size={24} />
+            </button>
+          )}
+          <h1>Match Analysis</h1>
+        </header>
+
+        <div className="view-selector stat-card full-width">
+          <button 
+            className={viewSetIndex === 'all' ? 'active' : ''} 
+            onClick={() => setViewSetIndex('all')}
+          >
+            All Match
+          </button>
+          {match.sets.map((_, i) => (
+            <button 
+              key={i} 
+              className={viewSetIndex === i ? 'active' : ''} 
+              onClick={() => setViewSetIndex(i)}
+            >
+              Set {i + 1}
+            </button>
+          ))}
+          <div className="view-selector-divider"></div>
+          <button className="secondary" onClick={downloadJson}>
+            <Download size={18} /> Export JSON
+          </button>
+          <button className="secondary" onClick={onReset}>
+            <RefreshCw size={18} /> New Match
+          </button>
+        </div>
+
         <div className="stat-card summary">
           <h3>Summary</h3>
           <div className="score-display">

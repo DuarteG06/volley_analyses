@@ -305,9 +305,13 @@ hr {
   justify-content: center;
   align-items: center;
   min-height: 48px;
-  margin-bottom: 0.5rem;
   width: 100%;
   padding: 0 48px;
+}
+
+.analysis-header.stat-card {
+  background: none;
+  box-shadow: none;
 }
 
 .analysis-header h1 {
@@ -335,6 +339,12 @@ hr {
   width: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.view-selector.stat-card {
+  background: none;
+  box-shadow: none;
+  justify-content: center;
 }
 
 .view-selector::-webkit-scrollbar {
