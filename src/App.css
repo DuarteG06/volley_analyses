@@ -300,13 +300,16 @@ hr {
 
 .analysis-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  gap: 1rem;
+  text-align: center;
 }
 
 .header-actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .view-selector {
@@ -314,6 +317,7 @@ hr {
   gap: 0.5rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
+  justify-content: center;
 }
 
 .view-selector button {
@@ -381,13 +385,6 @@ hr {
 
 .chart-container.bar {
   height: 300px;
-}
-
-.detailed-stats {
-  background: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
 .stats-list {

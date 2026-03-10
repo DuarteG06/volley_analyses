@@ -250,54 +250,54 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             </div>
           </div>
         )}
-      </div>
 
-      <div className="detailed-stats">
-        <h3>Detailed Stats</h3>
-        <div className="stats-list">
-          <div className="stat-item">
-            <span>Blocks:</span>
-            <span>{stats.scoring.block || 0} ({getPercent(stats.scoring.block || 0, stats.ourPoints)})</span>
-          </div>
-          <div className="stat-item">
-            <span>Spike Kills:</span>
-            <span>{stats.scoring.spike_kill || 0} ({getPercent(stats.scoring.spike_kill || 0, stats.ourPoints)})</span>
-          </div>
-          <div className="stat-item">
-            <span>Aces:</span>
-            <span>{stats.scoring.ace || 0} ({getPercent(stats.scoring.ace || 0, stats.ourPoints)})</span>
-          </div>
-          <div className="stat-item">
-            <span>Set Dumps:</span>
-            <span>{stats.scoring.set_dump || 0} ({getPercent(stats.scoring.set_dump || 0, stats.ourPoints)})</span>
-          </div>
-          <div className="stat-item">
-            <span>Opponent Errors:</span>
-            <span>{stats.scoring.opponent_error || 0} ({getPercent(stats.scoring.opponent_error || 0, stats.ourPoints)})</span>
-          </div>
-          <hr />
-          <div className="stat-item">
-            <span>Receive Quality:</span>
-            <span>
-              A: {getPercent(stats.receive.A, receiveTotal)} | 
-              B: {getPercent(stats.receive.B, receiveTotal)} | 
-              C: {getPercent(stats.receive.C, receiveTotal)}
-            </span>
-          </div>
-          <hr />
-          <div className="stat-item">
-            <span>Cover existed on blocks against us:</span>
-            <span>
-              {stats.protection.yes} Yes ({getPercent(stats.protection.yes, stats.protection.yes + stats.protection.no)}) /{" "}
-              {stats.protection.no} No ({getPercent(stats.protection.no, stats.protection.yes + stats.protection.no)})
-            </span>
-          </div>
-          <div className="stat-item">
-            <span>Opponent spike kills:</span>
-            <span>
-              {stats.goodSpikeAgainst} Good Spike ({getPercent(stats.goodSpikeAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)}) /{" "}
-              {stats.failedReceiveAgainst} Failed Receive ({getPercent(stats.failedReceiveAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)})
-            </span>
+        <div className="stat-card full-width">
+          <h3>Detailed Stats</h3>
+          <div className="stats-list">
+            <div className="stat-item">
+              <span>Blocks:</span>
+              <span>{stats.scoring.block || 0} ({getPercent(stats.scoring.block || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
+              <span>Spike Kills:</span>
+              <span>{stats.scoring.spike_kill || 0} ({getPercent(stats.scoring.spike_kill || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
+              <span>Aces:</span>
+              <span>{stats.scoring.ace || 0} ({getPercent(stats.scoring.ace || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
+              <span>Set Dumps:</span>
+              <span>{stats.scoring.set_dump || 0} ({getPercent(stats.scoring.set_dump || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
+              <span>Opponent Errors:</span>
+              <span>{stats.scoring.opponent_error || 0} ({getPercent(stats.scoring.opponent_error || 0, stats.ourPoints)})</span>
+            </div>
+            <hr />
+            <div className="stat-item">
+              <span>Receive Quality:</span>
+              <span>
+                A: {getPercent(stats.receive.A, receiveTotal)} | 
+                B: {getPercent(stats.receive.B, receiveTotal)} | 
+                C: {getPercent(stats.receive.C, receiveTotal)}
+              </span>
+            </div>
+            <hr />
+            <div className="stat-item">
+              <span>Cover existed on blocks against us:</span>
+              <span>
+                {stats.protection.yes} Yes ({getPercent(stats.protection.yes, stats.protection.yes + stats.protection.no)}) /{" "}
+                {stats.protection.no} No ({getPercent(stats.protection.no, stats.protection.yes + stats.protection.no)})
+              </span>
+            </div>
+            <div className="stat-item">
+              <span>Opponent spike kills:</span>
+              <span>
+                {stats.goodSpikeAgainst} Good Spike ({getPercent(stats.goodSpikeAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)}) /{" "}
+                {stats.failedReceiveAgainst} Failed Receive ({getPercent(stats.failedReceiveAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)})
+              </span>
+            </div>
           </div>
         </div>
       </div>
