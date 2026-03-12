@@ -118,6 +118,11 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   };
 
   const receiveTotal = stats.receive.A + stats.receive.B + stats.receive.C;
+  const unforcedErrors = (stats.errors.missed_free_ball || 0) +
+    (stats.errors.ball_into_net || 0) +
+    (stats.errors.ball_out_of_bounds || 0) +
+    (stats.errors.bad_set || 0) +
+    (stats.errors.serve_miss || 0);
 
   const scoringData = {
     labels: Object.keys(stats.scoring).map(r => r.replace(/_/g, ' ')),
@@ -330,6 +335,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
                 {stats.goodSpikeAgainst} Good Spike ({getPercent(stats.goodSpikeAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)}) /{" "}
                 {stats.failedReceiveAgainst} Failed Receive ({getPercent(stats.failedReceiveAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)})
               </span>
+            </div>
+            <div className="stat-item">
+              <span>Points given to opponent:</span>
+              <span>{unforcedErrors} ({getPercent(unforcedErrors, stats.opponentPoints)})</span>
             </div>
           </div>
         </div>
