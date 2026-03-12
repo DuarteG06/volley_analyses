@@ -306,7 +306,7 @@ hr {
   align-items: center;
   min-height: 48px;
   width: 100%;
-  padding: 0 48px;
+  padding: 0 40px;
 }
 
 .analysis-header.stat-card {
@@ -336,7 +336,7 @@ hr {
   overflow-x: auto;
   padding: 0.25rem 0 0.75rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -345,7 +345,6 @@ hr {
 .view-selector.stat-card {
   background: none;
   box-shadow: none;
-  justify-content: center;
 }
 
 .view-selector::-webkit-scrollbar {
@@ -381,7 +380,7 @@ hr {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 1.5rem;
   width: 100%;
 }
@@ -391,6 +390,7 @@ hr {
   padding: 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  min-width: 0;
 }
 
 .stat-card.full-width {
@@ -411,7 +411,7 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   margin: 1rem 0;
 }
 
@@ -420,6 +420,13 @@ hr {
   flex-direction: column;
   align-items: center;
   color: #ffffff;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.score-display .team .name {
+  overflow-wrap: break-word;
 }
 
 .score-display .val {
@@ -450,6 +457,9 @@ hr {
   justify-content: space-between;
   font-weight: 600;
   color: #ffffff;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  word-break: break-word;
 }
 
 .primary-large {
@@ -475,8 +485,7 @@ hr {
     grid-template-columns: 1fr;
   }
   .view-selector {
-    justify-content: flex-start;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
