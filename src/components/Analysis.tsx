@@ -128,7 +128,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     labels: Object.keys(stats.scoring).map(r => r.replace(/_/g, ' ')),
     datasets: [{
       data: Object.values(stats.scoring),
-      backgroundColor: ['#4ade80', '#60a5fa', '#facc15', '#f87171', '#a78bfa'],
+      backgroundColor: ['#4ade80', '#60a5fa', '#facc15', '#f87171', '#a78bfa', '#2dd4bf', '#fb923c', '#818cf8'],
     }]
   };
 
@@ -136,7 +136,11 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     labels: Object.keys(stats.errors).map(r => r.replace(/_/g, ' ')),
     datasets: [{
       data: Object.values(stats.errors),
-      backgroundColor: ['#f87171', '#fb923c', '#fbbf24', '#f472b6', '#a78bfa', '#94a3b8'],
+      backgroundColor: [
+        '#f87171', '#fb923c', '#fbbf24', '#f472b6', '#a78bfa', 
+        '#94a3b8', '#2dd4bf', '#818cf8', '#fb7185', '#c084fc', 
+        '#38bdf8', '#a3e635', '#22d3ee', '#4ade80', '#facc15'
+      ],
     }]
   };
 
