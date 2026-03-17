@@ -69,6 +69,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         return (
           <div className="button-grid">
             <button onClick={() => handleReasonClick('block')}>Block</button>
+            <button onClick={() => handleReasonClick('block_out')}>Block Out</button>
             <button onClick={() => handleReasonClick('spike_kill')}>Spike Kill</button>
             <button onClick={() => handleReasonClick('ace')}>Ace</button>
             <button onClick={() => handleReasonClick('set_dump')}>Set Dump</button>
@@ -79,6 +80,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         return (
           <div className="button-grid">
             <button onClick={() => handleReasonClick('block_against')}>Block Against Us</button>
+            <button onClick={() => handleReasonClick('block_out_against')}>Block Out Against Us</button>
             <button onClick={() => handleReasonClick('spike_kill_against')}>Spike Kill Against Us</button>
             <button onClick={() => handleReasonClick('missed_free_ball')}>Missed Free Ball</button>
             <button onClick={() => handleReasonClick('ball_into_net')}>Ball into Net</button>
@@ -93,6 +95,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         return (
           <div className="button-grid">
             <button onClick={() => handleReasonClick('block')}>Block</button>
+            <button onClick={() => handleReasonClick('block_out')}>Block Out</button>
             <button onClick={() => handleReasonClick('spike_kill')}>Spike Kill</button>
             <button onClick={() => handleReasonClick('set_dump')}>Set Dump</button>
             <button onClick={() => handleReasonClick('serve_miss')}>Opponent Serve Miss</button>
@@ -103,6 +106,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         return (
           <div className="button-grid">
             <button onClick={() => handleReasonClick('block_against')}>Block Against Us</button>
+            <button onClick={() => handleReasonClick('block_out_against')}>Block Out Against Us</button>
             <button onClick={() => handleReasonClick('spike_kill_against')}>Spike Kill Against Us</button>
             <button onClick={() => handleReasonClick('ace')}>Ace Against Us</button>
             <button onClick={() => handleReasonClick('missed_free_ball')}>Missed Free Ball</button>

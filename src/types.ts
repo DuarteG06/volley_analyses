@@ -10,11 +10,13 @@ export interface EventDetails {
 
 export type PointReason = 
   | 'block'
+  | 'block_out'
   | 'spike_kill'
   | 'ace'
   | 'set_dump'
   | 'opponent_error'
   | 'block_against'
+  | 'block_out_against'
   | 'spike_kill_against'
   | 'missed_free_ball'
   | 'ball_into_net'

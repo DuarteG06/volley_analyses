@@ -297,6 +297,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               <span>{stats.scoring.block || 0} ({getPercent(stats.scoring.block || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
+              <span>Block Outs:</span>
+              <span>{stats.scoring.block_out || 0} ({getPercent(stats.scoring.block_out || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
               <span>Spike Kills:</span>
               <span>{stats.scoring.spike_kill || 0} ({getPercent(stats.scoring.spike_kill || 0, stats.ourPoints)})</span>
             </div>
@@ -322,6 +326,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               </span>
             </div>
             <hr />
+            <div className="stat-item">
+              <span>Block out against us:</span>
+              <span>{stats.errors.block_out_against || 0} ({getPercent(stats.errors.block_out_against || 0, stats.opponentPoints)})</span>
+            </div>
             <div className="stat-item">
               <span>Cover existed on blocks against us:</span>
               <span>

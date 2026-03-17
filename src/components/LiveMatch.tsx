@@ -1,7 +1,7 @@
-import { useState, useMemo, type FC } from 'react';
+import { useState, useMemo, type FC, Fragment } from 'react';
 import type { MatchData, Team, PointReason, EventDetails, MatchEvent } from '../types';
 import RecordingModal from './RecordingModal';
-import { RotateCcw, BarChart2, Undo2 } from 'lucide-react';
+import { RotateCcw, BarChart2, Undo2, ArrowLeftRight } from 'lucide-react';
 
 interface Props {
   match: MatchData;
@@ -11,29 +11,38 @@ interface Props {
 
 const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
   const [recordingTeam, setRecordingTeam] = useState<Team | null>(null);
+  const [isSwapped, setIsSwapped] = useState(false);
 
   const currentSet = match.sets[match.currentSetIndex];
   
   // Calculate who is serving
-  // In volleyball, the team that won the last point serves.
-  // For the first point of the set, we need to handle it.
   const servingTeam = useMemo(() => {
     if (currentSet.events.length === 0) {
-      // First point of the set
-      // Usually, the server alternates sets, but let's simplify or check match rules.
-      // Instruction says "which team is serving" should be displayed.
-      // We'll use the match.initialServer for the first set, and then alternate or use last point winner.
-      // Actually, rule is: Team that won the last point serves.
-      // For start of set 1: initialServer.
-      // For start of subsequent sets: usually alternate from set 1 start.
       if (match.currentSetIndex === 0) return match.initialServer;
-      
-      // For subsequent sets, it alternates from the START of the previous set.
       const firstSetServer = match.initialServer;
       return match.currentSetIndex % 2 === 0 ? firstSetServer : (firstSetServer === 'us' ? 'opponent' : 'us');
     }
     return currentSet.events[currentSet.events.length - 1].scoringTeam;
   }, [currentSet.events, match.currentSetIndex, match.initialServer]);
+
+  const teams = [
+    { 
+      key: 'us' as Team, 
+      name: match.ourTeamName, 
+      score: currentSet.ourScore, 
+      serving: servingTeam === 'us',
+      pointClass: 'our-point'
+    },
+    { 
+      key: 'opponent' as Team, 
+      name: match.opponentTeamName, 
+      score: currentSet.opponentScore, 
+      serving: servingTeam === 'opponent',
+      pointClass: 'opponent-point'
+    }
+  ];
+
+  const displayedTeams = isSwapped ? [...teams].reverse() : teams;
 
   const handlePointScored = (team: Team) => {
     setRecordingTeam(team);
@@ -58,7 +67,6 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
     updatedMatch.sets = [...match.sets];
     updatedMatch.sets[match.currentSetIndex] = updatedSet;
 
-    // Check if set is finished
     const targetScore = (match.type === '5set' && match.currentSetIndex === 4) ? 15 : 25;
     
     const { ourScore, opponentScore } = updatedSet;
@@ -67,8 +75,6 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
 
     if (isFinished) {
       updatedSet.finished = true;
-      
-      // Check if match is finished
       const ourSetsWon = updatedMatch.sets.filter(s => s.finished && s.ourScore > s.opponentScore).length;
       const opponentSetsWon = updatedMatch.sets.filter(s => s.finished && s.opponentScore > s.ourScore).length;
       const setsToWin = match.type === '3set' ? 2 : 3;
@@ -76,7 +82,6 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
       if (ourSetsWon === setsToWin || opponentSetsWon === setsToWin) {
         updatedMatch.status = 'finished';
       } else {
-        // Start next set
         updatedMatch.currentSetIndex++;
         updatedMatch.sets.push({ ourScore: 0, opponentScore: 0, events: [], finished: false });
       }
@@ -92,11 +97,8 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
     
     if (currentSet.events.length === 0) {
       if (match.currentSetIndex > 0) {
-        // Go back to previous set if this one just started
         updatedMatch.currentSetIndex--;
-        // Re-enable the previous set
         updatedMatch.sets[updatedMatch.currentSetIndex].finished = false;
-        // Also remove the empty set we just left
         updatedMatch.sets.pop();
         onUpdate(updatedMatch);
       }
@@ -127,31 +129,36 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
       </header>
 
       <div className="scoreboard">
-        <div className={`team-score ${servingTeam === 'us' ? 'serving' : ''}`}>
-          <span className="team-name">{match.ourTeamName}</span>
-          <span className="score-value">{currentSet.ourScore}</span>
-          {servingTeam === 'us' && <div className="serving-dot">● SERVING</div>}
-        </div>
-        <div className="score-divider">:</div>
-        <div className={`team-score ${servingTeam === 'opponent' ? 'serving' : ''}`}>
-          <span className="team-name">{match.opponentTeamName}</span>
-          <span className="score-value">{currentSet.opponentScore}</span>
-          {servingTeam === 'opponent' && <div className="serving-dot">● SERVING</div>}
-        </div>
+        {displayedTeams.map((team, idx) => (
+          <Fragment key={team.key}>
+            <div className={`team-score ${team.serving ? 'serving' : ''}`}>
+              <span className="team-name">{team.name}</span>
+              <span className="score-value">{team.score}</span>
+              {team.serving && <div className="serving-dot">● SERVING</div>}
+            </div>
+            {idx === 0 && <div className="score-divider">:</div>}
+          </Fragment>
+        ))}
       </div>
 
       <div className="action-buttons">
-        <button className="point-button our-point" onClick={() => handlePointScored('us')}>
-          POINT {match.ourTeamName}
-        </button>
-        <button className="point-button opponent-point" onClick={() => handlePointScored('opponent')}>
-          POINT {match.opponentTeamName}
-        </button>
+        {displayedTeams.map(team => (
+          <button 
+            key={team.key}
+            className={`point-button ${team.pointClass}`} 
+            onClick={() => handlePointScored(team.key)}
+          >
+            POINT {team.name}
+          </button>
+        ))}
       </div>
 
       <div className="footer-actions">
         <button className="secondary" onClick={undoLastPoint} disabled={currentSet.events.length === 0 && match.currentSetIndex === 0}>
           <Undo2 size={18} /> Undo Last Point
+        </button>
+        <button className="secondary" onClick={() => setIsSwapped(!isSwapped)}>
+          <ArrowLeftRight size={18} /> Swap Sides
         </button>
       </div>
 
