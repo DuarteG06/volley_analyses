@@ -1,6 +1,6 @@
 {
   "name": "Volleyball Match Analysis",
-  "short_name": "VolleyAnalyses",
+  "short_name": "VolleyAnalysis",
   "description": "Track and analyze volleyball matches in real-time.",
   "start_url": "/",
   "display": "standalone",
