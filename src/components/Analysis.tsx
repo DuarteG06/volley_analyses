@@ -56,7 +56,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
       protection: { yes: 0, no: 0 },
       failedReceiveAgainst: 0,
       goodSpikeAgainst: 0,
-      pointsScoredWhenOpponentServed: 0,
+      totalReceptionRallies: 0,
       sideoutsScored: 0
     };
 
@@ -65,20 +65,17 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
         s.receive[event.details.receiveQuality]++;
       }
 
+      // Sideout tracking: Any rally where opponent served, excluding their serve misses
+      if (event.servingTeam === 'opponent' && event.reason !== 'serve_miss') {
+        s.totalReceptionRallies++;
+        if (event.scoringTeam === 'us' && event.details.sideout) {
+          s.sideoutsScored++;
+        }
+      }
+
       if (event.scoringTeam === 'us') {
         s.ourPoints++;
         s.scoring[event.reason] = (s.scoring[event.reason] || 0) + 1;
-        
-        if (event.servingTeam === 'opponent') {
-          // Denominator for sideouts: excludes only serve misses.
-          // Blocks and opponent errors count as failed sideouts (denominator up, numerator stays same).
-          if (event.reason !== 'serve_miss') {
-            s.pointsScoredWhenOpponentServed++;
-            if (event.details.sideout) {
-              s.sideoutsScored++;
-            }
-          }
-        }
       } else {
         s.opponentPoints++;
         s.errors[event.reason] = (s.errors[event.reason] || 0) + 1;
@@ -335,7 +332,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             </div>
             <div className="stat-item">
               <span>Sideouts (scored on first attempt):</span>
-              <span>{stats.sideoutsScored} / {stats.pointsScoredWhenOpponentServed} ({getPercent(stats.sideoutsScored, stats.pointsScoredWhenOpponentServed)})</span>
+              <span>{stats.sideoutsScored} / {stats.totalReceptionRallies} ({getPercent(stats.sideoutsScored, stats.totalReceptionRallies)})</span>
             </div>
             <hr />
             <div className="stat-item">
