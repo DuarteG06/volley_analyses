@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type FC, MouseEvent } from 'react';
 
 interface Props {
   title: string;
@@ -19,8 +19,14 @@ const ConfirmationModal: FC<Props> = ({
   cancelLabel = 'Cancel',
   isDanger = false 
 }) => {
+  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onCancel();
+    }
+  };
+
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <h2>{title}</h2>
         <p style={{ margin: '1rem 0', color: 'var(--secondary)' }}>{message}</p>

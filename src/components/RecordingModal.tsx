@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, type FC, MouseEvent } from 'react';
 import type { Team, PointReason, EventDetails, ReceiveQuality } from '../types';
 
 interface Props {
@@ -14,6 +14,12 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
   const [step, setStep] = useState<Step>('reason');
   const [selectedReason, setSelectedReason] = useState<PointReason | null>(null);
   const [details, setDetails] = useState<EventDetails>({});
+
+  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onCancel();
+    }
+  };
 
   const needsReceiveQuality = (reason: PointReason) => {
     // Always ask for receive quality when opponent is serving, except for aces or missed serves
@@ -196,7 +202,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <h2>{scoringTeam === 'us' ? 'Our Point!' : 'Opponent Point'}</h2>
         <p>
