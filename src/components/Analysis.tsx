@@ -70,9 +70,12 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
         s.scoring[event.reason] = (s.scoring[event.reason] || 0) + 1;
         
         if (event.servingTeam === 'opponent') {
-          s.pointsScoredWhenOpponentServed++;
-          if (event.details.sideout) {
-            s.sideoutsScored++;
+          // Denominator for sideouts: excludes serve misses, blocks, and opponent errors
+          if (event.reason !== 'serve_miss' && event.reason !== 'block' && event.reason !== 'opponent_error') {
+            s.pointsScoredWhenOpponentServed++;
+            if (event.details.sideout) {
+              s.sideoutsScored++;
+            }
           }
         }
       } else {

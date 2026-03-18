@@ -23,8 +23,12 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
 
   const needsSideoutQuestion = (reason: PointReason) => {
     // We only ask for sideout if we scored while the opponent was serving
-    // and it wasn't a direct serve miss (where there was no reception/sideout play)
-    return scoringTeam === 'us' && servingTeam === 'opponent' && reason !== 'serve_miss';
+    // and it wasn't a direct serve miss, a block, or an opponent error
+    return scoringTeam === 'us' && 
+           servingTeam === 'opponent' && 
+           reason !== 'serve_miss' && 
+           reason !== 'block' && 
+           reason !== 'opponent_error';
   };
 
   const needsExtraDetails = (reason: PointReason) => {
