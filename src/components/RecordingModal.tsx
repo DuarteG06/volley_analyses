@@ -1,4 +1,4 @@
-import { useState, type FC, MouseEvent } from 'react';
+import { useState, type FC, type MouseEvent } from 'react';
 import type { Team, PointReason, EventDetails, ReceiveQuality } from '../types';
 
 interface Props {

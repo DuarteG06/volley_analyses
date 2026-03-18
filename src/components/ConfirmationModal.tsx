@@ -1,4 +1,4 @@
-import { type FC, MouseEvent } from 'react';
+import { type FC, type MouseEvent } from 'react';
 
 interface Props {
   title: string;
