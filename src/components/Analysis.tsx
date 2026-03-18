@@ -70,8 +70,9 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
         s.scoring[event.reason] = (s.scoring[event.reason] || 0) + 1;
         
         if (event.servingTeam === 'opponent') {
-          // Denominator for sideouts: excludes serve misses, blocks, and opponent errors
-          if (event.reason !== 'serve_miss' && event.reason !== 'block' && event.reason !== 'opponent_error') {
+          // Denominator for sideouts: excludes only serve misses.
+          // Blocks and opponent errors count as failed sideouts (denominator up, numerator stays same).
+          if (event.reason !== 'serve_miss') {
             s.pointsScoredWhenOpponentServed++;
             if (event.details.sideout) {
               s.sideoutsScored++;
