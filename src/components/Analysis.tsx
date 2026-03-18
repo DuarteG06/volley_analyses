@@ -331,7 +331,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               <span>{stats.scoring.opponent_error || 0} ({getPercent(stats.scoring.opponent_error || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Sideouts (scored on first attempt):</span>
+              <span>Sideouts (scored first try):</span>
               <span>{stats.sideoutsScored} / {stats.totalReceptionRallies} ({getPercent(stats.sideoutsScored, stats.totalReceptionRallies)})</span>
             </div>
             <hr />
