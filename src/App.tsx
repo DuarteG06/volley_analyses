@@ -4,6 +4,7 @@ import type { MatchData, MatchType, Team } from './types';
 import MatchSetup from './components/MatchSetup';
 import LiveMatch from './components/LiveMatch';
 import Analysis from './components/Analysis';
+import ConfirmationModal from './components/ConfirmationModal';
 
 const STORAGE_KEY = 'volleyball_match_data';
 
@@ -12,6 +13,7 @@ function App() {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : null;
   });
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     if (match) {
@@ -34,10 +36,13 @@ function App() {
   };
 
   const resetMatch = () => {
-    if (window.confirm('Are you sure you want to start a new match? Current data will be lost if not exported.')) {
-      setMatch(null);
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    setShowResetConfirm(true);
+  };
+
+  const handleConfirmReset = () => {
+    setMatch(null);
+    localStorage.removeItem(STORAGE_KEY);
+    setShowResetConfirm(false);
   };
 
   const updateMatch = (updated: MatchData) => {
@@ -48,15 +53,29 @@ function App() {
     setMatch(data);
   };
 
-  if (!match) {
-    return <MatchSetup onStart={startNewMatch} onImport={importMatch} />;
-  }
-
-  if (match.status === 'playing') {
-    return <LiveMatch match={match} onUpdate={updateMatch} onReset={resetMatch} />;
-  }
-
-  return <Analysis match={match} onReset={resetMatch} onUpdate={updateMatch} />;
+  return (
+    <>
+      {!match && <MatchSetup onStart={startNewMatch} onImport={importMatch} />}
+      {match && match.status === 'playing' && (
+        <LiveMatch match={match} onUpdate={updateMatch} onReset={resetMatch} />
+      )}
+      {match && match.status === 'finished' && (
+        <Analysis match={match} onReset={resetMatch} onUpdate={updateMatch} />
+      )}
+      
+      {showResetConfirm && (
+        <ConfirmationModal
+          title="New Match?"
+          message="Are you sure you want to start a new match? Current data will be lost if not exported."
+          confirmLabel="Yes, Start New"
+          cancelLabel="Cancel"
+          onConfirm={handleConfirmReset}
+          onCancel={() => setShowResetConfirm(false)}
+          isDanger={true}
+        />
+      )}
+    </>
+  );
 }
 
 export default App;
