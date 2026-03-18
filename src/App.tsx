@@ -67,7 +67,7 @@ function App() {
         <ConfirmationModal
           title="New Match?"
           message="Are you sure you want to start a new match? Current data will be lost if not exported."
-          confirmLabel="Yes, Start New"
+          confirmLabel="Yes, Start New Match"
           cancelLabel="Cancel"
           onConfirm={handleConfirmReset}
           onCancel={() => setShowResetConfirm(false)}
