@@ -55,7 +55,9 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
       receive: { A: 0, B: 0, C: 0 },
       protection: { yes: 0, no: 0 },
       failedReceiveAgainst: 0,
-      goodSpikeAgainst: 0
+      goodSpikeAgainst: 0,
+      pointsScoredWhenOpponentServed: 0,
+      sideoutsScored: 0
     };
 
     selectedEvents.forEach(event => {
@@ -66,6 +68,13 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
       if (event.scoringTeam === 'us') {
         s.ourPoints++;
         s.scoring[event.reason] = (s.scoring[event.reason] || 0) + 1;
+        
+        if (event.servingTeam === 'opponent') {
+          s.pointsScoredWhenOpponentServed++;
+          if (event.details.sideout) {
+            s.sideoutsScored++;
+          }
+        }
       } else {
         s.opponentPoints++;
         s.errors[event.reason] = (s.errors[event.reason] || 0) + 1;
@@ -319,6 +328,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             <div className="stat-item">
               <span>Opponent Errors:</span>
               <span>{stats.scoring.opponent_error || 0} ({getPercent(stats.scoring.opponent_error || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
+              <span>Sideouts (scored on first attempt):</span>
+              <span>{stats.sideoutsScored} / {stats.pointsScoredWhenOpponentServed} ({getPercent(stats.sideoutsScored, stats.pointsScoredWhenOpponentServed)})</span>
             </div>
             <hr />
             <div className="stat-item">

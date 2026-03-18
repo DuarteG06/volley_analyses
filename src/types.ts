@@ -6,6 +6,7 @@ export interface EventDetails {
   protection?: boolean; // Block against us: ask if protection existed
   failedReceive?: boolean; // Spike kill against us: good spike or failed receive?
   receiveQuality?: ReceiveQuality; // Receive quality: A/B/C
+  sideout?: boolean; // Scored on the first attempt after receiving
 }
 
 export type PointReason = 

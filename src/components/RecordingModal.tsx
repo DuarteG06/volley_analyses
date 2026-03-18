@@ -8,7 +8,7 @@ interface Props {
   onCancel: () => void;
 }
 
-type Step = 'reason' | 'receive' | 'extra';
+type Step = 'reason' | 'receive' | 'sideout' | 'extra';
 
 const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCancel }) => {
   const [step, setStep] = useState<Step>('reason');
@@ -19,6 +19,12 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
     // Always ask for receive quality when opponent is serving, except for aces or missed serves
     // Aces are handled automatically as 'C' quality
     return servingTeam === 'opponent' && reason !== 'ace' && reason !== 'serve_miss';
+  };
+
+  const needsSideoutQuestion = (reason: PointReason) => {
+    // We only ask for sideout if we scored while the opponent was serving
+    // and it wasn't a direct serve miss (where there was no reception/sideout play)
+    return scoringTeam === 'us' && servingTeam === 'opponent' && reason !== 'serve_miss';
   };
 
   const needsExtraDetails = (reason: PointReason) => {
@@ -37,7 +43,10 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         initialDetails.receiveQuality = 'C';
       }
 
-      if (needsExtraDetails(reason)) {
+      if (needsSideoutQuestion(reason)) {
+        setDetails(initialDetails);
+        setStep('sideout');
+      } else if (needsExtraDetails(reason)) {
         setDetails(initialDetails);
         setStep('extra');
       } else {
@@ -48,6 +57,19 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
 
   const handleReceiveQuality = (quality: ReceiveQuality) => {
     const updatedDetails = { ...details, receiveQuality: quality };
+    setDetails(updatedDetails);
+
+    if (selectedReason && needsSideoutQuestion(selectedReason)) {
+      setStep('sideout');
+    } else if (selectedReason && needsExtraDetails(selectedReason)) {
+      setStep('extra');
+    } else if (selectedReason) {
+      onConfirm(selectedReason, updatedDetails);
+    }
+  };
+
+  const handleSideout = (isSideout: boolean) => {
+    const updatedDetails = { ...details, sideout: isSideout };
     setDetails(updatedDetails);
 
     if (selectedReason && needsExtraDetails(selectedReason)) {
@@ -130,6 +152,17 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
     </div>
   );
 
+  const renderSideoutStep = () => (
+    <div className="details-prompt">
+      <h3>Was it a Sideout?</h3>
+      <p>(Scored on first attempt)</p>
+      <div className="button-group">
+        <button onClick={() => handleSideout(true)}>Yes</button>
+        <button onClick={() => handleSideout(false)}>No</button>
+      </div>
+    </div>
+  );
+
   const renderExtraStep = () => {
     if (selectedReason === 'block_against') {
       return (
@@ -165,11 +198,13 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         <p>
           {step === 'reason' && 'How did the point happen?'}
           {step === 'receive' && 'Rate the receive quality'}
+          {step === 'sideout' && 'Sideout detail'}
           {step === 'extra' && 'Additional details'}
         </p>
         
         {step === 'reason' && renderReasons()}
         {step === 'receive' && renderReceiveStep()}
+        {step === 'sideout' && renderSideoutStep()}
         {step === 'extra' && renderExtraStep()}
         
         <div className="modal-footer">
