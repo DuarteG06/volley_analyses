@@ -23,6 +23,38 @@ ChartJS.register(
   Title
 );
 
+const ACTION_COLORS: Record<string, string> = {
+  // Scoring actions
+  ace: '#4ade80',
+  spike_kill: '#60a5fa',
+  block: '#a78bfa',
+  block_out: '#2dd4bf',
+  set_dump: '#facc15',
+  opponent_error: '#818cf8',
+  
+  // Error actions
+  serve_miss: '#ef4444',
+  spike_kill_against: '#f87171',
+  block_against: '#fb923c',
+  block_out_against: '#f472b6',
+  missed_free_ball: '#fbbf24',
+  ball_into_net: '#fb7185',
+  ball_out_of_bounds: '#c084fc',
+  bad_set: '#38bdf8',
+};
+
+const SCORING_ORDER = ['ace', 'spike_kill', 'block', 'block_out', 'set_dump', 'opponent_error'];
+const ERROR_ORDER = [
+  'serve_miss', 
+  'spike_kill_against', 
+  'block_against', 
+  'block_out_against', 
+  'missed_free_ball', 
+  'ball_into_net', 
+  'ball_out_of_bounds', 
+  'bad_set'
+];
+
 interface Props {
   match: MatchData;
   onReset: () => void;
@@ -134,23 +166,21 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     (stats.errors.bad_set || 0) +
     (stats.errors.serve_miss || 0);
 
+  const scoringKeys = SCORING_ORDER.filter(k => (stats.scoring[k] || 0) > 0);
   const scoringData = {
-    labels: Object.keys(stats.scoring).map(r => r.replace(/_/g, ' ')),
+    labels: scoringKeys.map(r => r.replace(/_/g, ' ')),
     datasets: [{
-      data: Object.values(stats.scoring),
-      backgroundColor: ['#4ade80', '#60a5fa', '#facc15', '#f87171', '#a78bfa', '#2dd4bf', '#fb923c', '#818cf8'],
+      data: scoringKeys.map(k => stats.scoring[k]),
+      backgroundColor: scoringKeys.map(r => ACTION_COLORS[r] || '#cccccc'),
     }]
   };
 
+  const errorKeys = ERROR_ORDER.filter(k => (stats.errors[k] || 0) > 0);
   const errorData = {
-    labels: Object.keys(stats.errors).map(r => r.replace(/_/g, ' ')),
+    labels: errorKeys.map(r => r.replace(/_/g, ' ')),
     datasets: [{
-      data: Object.values(stats.errors),
-      backgroundColor: [
-        '#f87171', '#fb923c', '#fbbf24', '#f472b6', '#a78bfa', 
-        '#94a3b8', '#2dd4bf', '#818cf8', '#fb7185', '#c084fc', 
-        '#38bdf8', '#a3e635', '#22d3ee', '#4ade80', '#facc15'
-      ],
+      data: errorKeys.map(k => stats.errors[k]),
+      backgroundColor: errorKeys.map(r => ACTION_COLORS[r] || '#cccccc'),
     }]
   };
 
