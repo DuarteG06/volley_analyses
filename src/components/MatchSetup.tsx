@@ -105,10 +105,19 @@ const MatchSetup: FC<Props> = ({ onStart, onImport }) => {
 
           <div className="setup-section">
             <h3>{t.setup.importData}</h3>
-            <button className="secondary" onClick={() => fileInputRef.current?.click()}>
-              <Upload size={18} />
-              {t.setup.importJson}
-            </button>
+            <div className="button-group">
+              <button className="secondary" onClick={() => fileInputRef.current?.click()}>
+                <Upload size={18} />
+                {t.setup.importJson}
+              </button>
+              <button 
+                className="secondary"
+                onClick={() => window.location.href = 'https://volei.pt'}
+                style={{ fontSize: '0.9rem' }}
+              >
+                {t.setup.moreTools}
+              </button>
+            </div>
             <input
               type="file"
               ref={fileInputRef}

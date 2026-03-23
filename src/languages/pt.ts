@@ -26,6 +26,7 @@ export const pt: Translations = {
     importJson: "Importar JSON",
     ourTeamDefault: "A Nossa Equipa",
     opponentTeamDefault: "Adversário",
+    moreTools: "Mais ferramentas de voleibol",
   },
   live: {
     resetMatch: "Reiniciar Jogo",

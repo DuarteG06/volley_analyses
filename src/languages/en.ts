@@ -24,6 +24,7 @@ export type Translations = {
     importJson: string;
     ourTeamDefault: string;
     opponentTeamDefault: string;
+    moreTools: string;
   };
   live: {
     resetMatch: string;
@@ -124,6 +125,7 @@ export const en: Translations = {
     importJson: "Import JSON",
     ourTeamDefault: "Our Team",
     opponentTeamDefault: "Opponent",
+    moreTools: "More volleyball tools",
   },
   live: {
     resetMatch: "Reset Match",
