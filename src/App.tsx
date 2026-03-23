@@ -5,10 +5,12 @@ import MatchSetup from './components/MatchSetup';
 import LiveMatch from './components/LiveMatch';
 import Analysis from './components/Analysis';
 import ConfirmationModal from './components/ConfirmationModal';
+import { useLanguage } from './languages/LanguageContext';
 
 const STORAGE_KEY = 'volleyball_match_data';
 
 function App() {
+  const { t } = useLanguage();
   const [match, setMatch] = useState<MatchData | null>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : null;
@@ -65,10 +67,10 @@ function App() {
       
       {showResetConfirm && (
         <ConfirmationModal
-          title="New Match?"
-          message="Are you sure you want to start a new match? Current data will be lost if not exported."
-          confirmLabel="Yes, Start New Match"
-          cancelLabel="Cancel"
+          title={t.common.newMatchQuestion}
+          message={t.common.resetMessage}
+          confirmLabel={t.common.confirm}
+          cancelLabel={t.common.cancel}
           onConfirm={handleConfirmReset}
           onCancel={() => setShowResetConfirm(false)}
           isDanger={true}

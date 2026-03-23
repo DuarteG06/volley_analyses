@@ -28,6 +28,38 @@ body {
   margin: 0 auto;
   min-height: 100vh;
   padding: 20px;
+  position: relative;
+}
+
+.lang-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  min-width: 45px;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lang-btn:hover {
+  background: var(--border);
+}
+
+.header-side {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.header-side.left {
+  justify-content: flex-start;
+}
+
+.header-side.right {
+  justify-content: flex-end;
 }
 
 /* Common Components */
@@ -330,6 +362,13 @@ hr {
   transform: translateY(-50%);
   z-index: 10;
   color: #ffffff;
+}
+
+.analysis-lang-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .view-selector {

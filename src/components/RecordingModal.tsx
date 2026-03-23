@@ -1,5 +1,6 @@
 import { useState, type FC, type MouseEvent } from 'react';
 import type { Team, PointReason, EventDetails, ReceiveQuality } from '../types';
+import { useLanguage } from '../languages/LanguageContext';
 
 interface Props {
   scoringTeam: Team;
@@ -11,6 +12,7 @@ interface Props {
 type Step = 'reason' | 'receive' | 'sideout' | 'extra';
 
 const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCancel }) => {
+  const { t } = useLanguage();
   const [step, setStep] = useState<Step>('reason');
   const [selectedReason, setSelectedReason] = useState<PointReason | null>(null);
   const [details, setDetails] = useState<EventDetails>({});
@@ -100,25 +102,25 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
       if (scoringTeam === 'us') {
         return (
           <div className="button-grid">
-            <button onClick={() => handleReasonClick('block')}>Block</button>
-            <button onClick={() => handleReasonClick('block_out')}>Block Out</button>
-            <button onClick={() => handleReasonClick('spike_kill')}>Spike Kill</button>
-            <button onClick={() => handleReasonClick('ace')}>Ace</button>
-            <button onClick={() => handleReasonClick('set_dump')}>Set Dump</button>
-            <button onClick={() => handleReasonClick('opponent_error')}>Opponent Error</button>
+            <button onClick={() => handleReasonClick('block')}>{t.reasons.block}</button>
+            <button onClick={() => handleReasonClick('block_out')}>{t.reasons.block_out}</button>
+            <button onClick={() => handleReasonClick('spike_kill')}>{t.reasons.spike_kill}</button>
+            <button onClick={() => handleReasonClick('ace')}>{t.reasons.ace}</button>
+            <button onClick={() => handleReasonClick('set_dump')}>{t.reasons.set_dump}</button>
+            <button onClick={() => handleReasonClick('opponent_error')}>{t.reasons.opponent_error}</button>
           </div>
         );
       } else {
         return (
           <div className="button-grid">
-            <button onClick={() => handleReasonClick('block_against')}>Block Against Us</button>
-            <button onClick={() => handleReasonClick('block_out_against')}>Block Out Against Us</button>
-            <button onClick={() => handleReasonClick('spike_kill_against')}>Spike Kill Against Us</button>
-            <button onClick={() => handleReasonClick('missed_free_ball')}>Missed Free Ball</button>
-            <button onClick={() => handleReasonClick('ball_into_net')}>Ball into Net</button>
-            <button onClick={() => handleReasonClick('ball_out_of_bounds')}>Ball Out of Bounds</button>
-            <button onClick={() => handleReasonClick('bad_set')}>Bad Set</button>
-            <button onClick={() => handleReasonClick('serve_miss')}>Serve Miss</button>
+            <button onClick={() => handleReasonClick('block_against')}>{t.reasons.block_against}</button>
+            <button onClick={() => handleReasonClick('block_out_against')}>{t.reasons.block_out_against}</button>
+            <button onClick={() => handleReasonClick('spike_kill_against')}>{t.reasons.spike_kill_against}</button>
+            <button onClick={() => handleReasonClick('missed_free_ball')}>{t.reasons.missed_free_ball}</button>
+            <button onClick={() => handleReasonClick('ball_into_net')}>{t.reasons.ball_into_net}</button>
+            <button onClick={() => handleReasonClick('ball_out_of_bounds')}>{t.reasons.ball_out_of_bounds}</button>
+            <button onClick={() => handleReasonClick('bad_set')}>{t.reasons.bad_set}</button>
+            <button onClick={() => handleReasonClick('serve_miss')}>{t.reasons.serve_miss}</button>
           </div>
         );
       }
@@ -126,25 +128,25 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
       if (scoringTeam === 'us') {
         return (
           <div className="button-grid">
-            <button onClick={() => handleReasonClick('block')}>Block</button>
-            <button onClick={() => handleReasonClick('block_out')}>Block Out</button>
-            <button onClick={() => handleReasonClick('spike_kill')}>Spike Kill</button>
-            <button onClick={() => handleReasonClick('set_dump')}>Set Dump</button>
-            <button onClick={() => handleReasonClick('serve_miss')}>Opponent Serve Miss</button>
-            <button onClick={() => handleReasonClick('opponent_error')}>Opponent Error</button>
+            <button onClick={() => handleReasonClick('block')}>{t.reasons.block}</button>
+            <button onClick={() => handleReasonClick('block_out')}>{t.reasons.block_out}</button>
+            <button onClick={() => handleReasonClick('spike_kill')}>{t.reasons.spike_kill}</button>
+            <button onClick={() => handleReasonClick('set_dump')}>{t.reasons.set_dump}</button>
+            <button onClick={() => handleReasonClick('serve_miss')}>{t.reasons.serve_miss}</button>
+            <button onClick={() => handleReasonClick('opponent_error')}>{t.reasons.opponent_error}</button>
           </div>
         );
       } else {
         return (
           <div className="button-grid">
-            <button onClick={() => handleReasonClick('block_against')}>Block Against Us</button>
-            <button onClick={() => handleReasonClick('block_out_against')}>Block Out Against Us</button>
-            <button onClick={() => handleReasonClick('spike_kill_against')}>Spike Kill Against Us</button>
-            <button onClick={() => handleReasonClick('ace')}>Ace Against Us</button>
-            <button onClick={() => handleReasonClick('missed_free_ball')}>Missed Free Ball</button>
-            <button onClick={() => handleReasonClick('ball_into_net')}>Ball into Net</button>
-            <button onClick={() => handleReasonClick('ball_out_of_bounds')}>Ball Out of Bounds</button>
-            <button onClick={() => handleReasonClick('bad_set')}>Bad Set</button>
+            <button onClick={() => handleReasonClick('block_against')}>{t.reasons.block_against}</button>
+            <button onClick={() => handleReasonClick('block_out_against')}>{t.reasons.block_out_against}</button>
+            <button onClick={() => handleReasonClick('spike_kill_against')}>{t.reasons.spike_kill_against}</button>
+            <button onClick={() => handleReasonClick('ace')}>{t.reasons.ace}</button>
+            <button onClick={() => handleReasonClick('missed_free_ball')}>{t.reasons.missed_free_ball}</button>
+            <button onClick={() => handleReasonClick('ball_into_net')}>{t.reasons.ball_into_net}</button>
+            <button onClick={() => handleReasonClick('ball_out_of_bounds')}>{t.reasons.ball_out_of_bounds}</button>
+            <button onClick={() => handleReasonClick('bad_set')}>{t.reasons.bad_set}</button>
           </div>
         );
       }
@@ -153,22 +155,22 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
 
   const renderReceiveStep = () => (
     <div className="details-prompt">
-      <h3>Receive Quality</h3>
+      <h3>{t.recording.receiveQuality}</h3>
       <div className="button-group">
-        <button onClick={() => handleReceiveQuality('A')}>A Pass</button>
-        <button onClick={() => handleReceiveQuality('B')}>B Pass</button>
-        <button onClick={() => handleReceiveQuality('C')}>C Pass</button>
+        <button onClick={() => handleReceiveQuality('A')}>{t.recording.passA}</button>
+        <button onClick={() => handleReceiveQuality('B')}>{t.recording.passB}</button>
+        <button onClick={() => handleReceiveQuality('C')}>{t.recording.passC}</button>
       </div>
     </div>
   );
 
   const renderSideoutStep = () => (
     <div className="details-prompt">
-      <h3>Was it a Sideout?</h3>
-      <p>(Scored on first attempt)</p>
+      <h3>{t.recording.wasItSideout}</h3>
+      <p>{t.recording.scoredFirstAttempt}</p>
       <div className="button-group">
-        <button onClick={() => handleSideout(true)}>Yes</button>
-        <button onClick={() => handleSideout(false)}>No</button>
+        <button onClick={() => handleSideout(true)}>{t.common.yes}</button>
+        <button onClick={() => handleSideout(false)}>{t.common.no}</button>
       </div>
     </div>
   );
@@ -177,10 +179,10 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
     if (selectedReason === 'block_against') {
       return (
         <div className="details-prompt">
-          <h3>Was there cover?</h3>
+          <h3>{t.recording.wasThereCover}</h3>
           <div className="button-group">
-            <button onClick={() => handleExtraDetails({ protection: true })}>Yes</button>
-            <button onClick={() => handleExtraDetails({ protection: false })}>No</button>
+            <button onClick={() => handleExtraDetails({ protection: true })}>{t.common.yes}</button>
+            <button onClick={() => handleExtraDetails({ protection: false })}>{t.common.no}</button>
           </div>
         </div>
       );
@@ -189,10 +191,10 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
     if (selectedReason === 'spike_kill_against') {
       return (
         <div className="details-prompt">
-          <h3>Why did they score?</h3>
+          <h3>{t.recording.whyDidTheyScore}</h3>
           <div className="button-group">
-            <button onClick={() => handleExtraDetails({ failedReceive: false })}>Good Spike</button>
-            <button onClick={() => handleExtraDetails({ failedReceive: true })}>Failed Receive</button>
+            <button onClick={() => handleExtraDetails({ failedReceive: false })}>{t.recording.goodSpike}</button>
+            <button onClick={() => handleExtraDetails({ failedReceive: true })}>{t.recording.failedReceive}</button>
           </div>
         </div>
       );
@@ -204,12 +206,12 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
-        <h2>{scoringTeam === 'us' ? 'Our Point!' : 'Opponent Point'}</h2>
+        <h2>{scoringTeam === 'us' ? t.recording.ourPoint : t.recording.opponentPoint}</h2>
         <p>
-          {step === 'reason' && 'How did the point happen?'}
-          {step === 'receive' && 'Rate the receive quality'}
-          {step === 'sideout' && 'Sideout detail'}
-          {step === 'extra' && 'Additional details'}
+          {step === 'reason' && t.recording.howItHappened}
+          {step === 'receive' && t.recording.receiveQualityDetail}
+          {step === 'sideout' && t.recording.sideoutDetail}
+          {step === 'extra' && t.recording.additionalDetails}
         </p>
         
         {step === 'reason' && renderReasons()}
@@ -218,7 +220,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         {step === 'extra' && renderExtraStep()}
         
         <div className="modal-footer">
-          <button className="text-button" onClick={onCancel}>Cancel</button>
+          <button className="text-button" onClick={onCancel}>{t.common.cancel}</button>
         </div>
       </div>
     </div>

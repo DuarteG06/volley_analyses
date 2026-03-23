@@ -2,6 +2,7 @@ import { useState, useMemo, type FC, Fragment } from 'react';
 import type { MatchData, Team, PointReason, EventDetails, MatchEvent } from '../types';
 import RecordingModal from './RecordingModal';
 import { RotateCcw, BarChart2, Undo2, ArrowLeftRight } from 'lucide-react';
+import { useLanguage } from '../languages/LanguageContext';
 
 interface Props {
   match: MatchData;
@@ -10,8 +11,13 @@ interface Props {
 }
 
 const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
+  const { t, language, setLanguage } = useLanguage();
   const [recordingTeam, setRecordingTeam] = useState<Team | null>(null);
   const [isSwapped, setIsSwapped] = useState(false);
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'pt' : 'en');
+  };
 
   const currentSet = match.sets[match.currentSetIndex];
   
@@ -117,15 +123,22 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
   return (
     <div className="live-match-container">
       <header className="match-header">
-        <button className="icon-button" onClick={onReset} title="Reset Match">
-          <RotateCcw size={20} />
-        </button>
-        <div className="set-info">
-          SET {match.currentSetIndex + 1}
+        <div className="header-side left">
+          <button className="icon-button" onClick={onReset} title={t.live.resetMatch}>
+            <RotateCcw size={20} />
+          </button>
         </div>
-        <button className="icon-button" onClick={() => onUpdate({ ...match, status: 'finished' })} title="Finish Match Early">
-          <BarChart2 size={20} />
-        </button>
+        <div className="set-info">
+          {t.common.set} {match.currentSetIndex + 1}
+        </div>
+        <div className="header-side right">
+          <button onClick={toggleLanguage} className="lang-btn">
+            {language === 'en' ? 'PT' : 'EN'}
+          </button>
+          <button className="icon-button" onClick={() => onUpdate({ ...match, status: 'finished' })} title={t.live.finishMatch}>
+            <BarChart2 size={20} />
+          </button>
+        </div>
       </header>
 
       <div className="scoreboard">
@@ -134,7 +147,7 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
             <div className={`team-score ${team.serving ? 'serving' : ''}`}>
               <span className="team-name">{team.name}</span>
               <span className="score-value">{team.score}</span>
-              {team.serving && <div className="serving-dot">● SERVING</div>}
+              {team.serving && <div className="serving-dot">● {t.live.serving}</div>}
             </div>
             {idx === 0 && <div className="score-divider">:</div>}
           </Fragment>
@@ -148,17 +161,17 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
             className={`point-button ${team.pointClass}`} 
             onClick={() => handlePointScored(team.key)}
           >
-            POINT {team.name}
+            {t.live.point} {team.name}
           </button>
         ))}
       </div>
 
       <div className="footer-actions">
         <button className="secondary" onClick={undoLastPoint} disabled={currentSet.events.length === 0 && match.currentSetIndex === 0}>
-          <Undo2 size={18} /> Undo Last Point
+          <Undo2 size={18} /> {t.live.undoLast}
         </button>
         <button className="secondary" onClick={() => setIsSwapped(!isSwapped)}>
-          <ArrowLeftRight size={18} /> Swap Sides
+          <ArrowLeftRight size={18} /> {t.live.swapSides}
         </button>
       </div>
 

@@ -12,6 +12,7 @@ import {
   Title,
 } from 'chart.js';
 import { Download, RefreshCw, ChevronLeft } from 'lucide-react';
+import { useLanguage } from '../languages/LanguageContext';
 
 ChartJS.register(
   ArcElement,
@@ -62,7 +63,12 @@ interface Props {
 }
 
 const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
+  const { t, language, setLanguage } = useLanguage();
   const [viewSetIndex, setViewSetIndex] = useState<number | 'all'>('all');
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'pt' : 'en');
+  };
 
   const isMatchOver = useMemo(() => {
     const ourSetsWon = match.sets.filter(s => s.finished && s.ourScore > s.opponentScore).length;
@@ -168,7 +174,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
   const scoringKeys = SCORING_ORDER.filter(k => (stats.scoring[k] || 0) > 0);
   const scoringData = {
-    labels: scoringKeys.map(r => r.replace(/_/g, ' ')),
+    labels: scoringKeys.map(r => t.reasons[r as keyof typeof t.reasons]),
     datasets: [{
       data: scoringKeys.map(k => stats.scoring[k]),
       backgroundColor: scoringKeys.map(r => ACTION_COLORS[r] || '#cccccc'),
@@ -177,7 +183,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
   const errorKeys = ERROR_ORDER.filter(k => (stats.errors[k] || 0) > 0);
   const errorData = {
-    labels: errorKeys.map(r => r.replace(/_/g, ' ')),
+    labels: errorKeys.map(r => t.reasons[r as keyof typeof t.reasons]),
     datasets: [{
       data: errorKeys.map(k => stats.errors[k]),
       backgroundColor: errorKeys.map(r => ACTION_COLORS[r] || '#cccccc'),
@@ -185,24 +191,24 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   };
 
   const receiveData = {
-    labels: ['A Pass', 'B Pass', 'C Pass'],
+    labels: [t.recording.passA, t.recording.passB, t.recording.passC],
     datasets: [{
-      label: 'Receive Quality',
+      label: t.analysis.receiveQuality,
       data: [stats.receive.A, stats.receive.B, stats.receive.C],
       backgroundColor: ['#22c55e', '#eab308', '#ef4444'],
     }]
   };
 
   const pointsPerSetData = {
-    labels: match.sets.map((_, i) => `Set ${i + 1}`),
+    labels: match.sets.map((_, i) => `${t.common.set} ${i + 1}`),
     datasets: [
       {
-        label: 'Our Score',
+        label: t.analysis.ourScore,
         data: match.sets.map(s => s.ourScore),
         backgroundColor: '#3b82f6',
       },
       {
-        label: 'Opponent Score',
+        label: t.analysis.opponentScore,
         data: match.sets.map(s => s.opponentScore),
         backgroundColor: '#ef4444',
       }
@@ -224,11 +230,14 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
       <div className="stats-grid">
         <header className="analysis-header stat-card full-width">
           {!isMatchOver && (
-            <button className="back-button icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title="Back to Match">
+            <button className="back-button icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title={t.analysis.backToMatch}>
               <ChevronLeft size={24} />
             </button>
           )}
-          <h1>Match Analysis</h1>
+          <h1>{t.analysis.title}</h1>
+          <button onClick={toggleLanguage} className="lang-btn analysis-lang-btn">
+            {language === 'en' ? 'PT' : 'EN'}
+          </button>
         </header>
 
         <div className="view-selector stat-card full-width">
@@ -236,7 +245,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             className={viewSetIndex === 'all' ? 'active' : ''} 
             onClick={() => setViewSetIndex('all')}
           >
-            All Match
+            {t.analysis.allMatch}
           </button>
           {match.sets.map((_, i) => (
             <button 
@@ -244,20 +253,20 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               className={viewSetIndex === i ? 'active' : ''} 
               onClick={() => setViewSetIndex(i)}
             >
-              Set {i + 1}
+              {t.common.set} {i + 1}
             </button>
           ))}
           <div className="view-selector-divider"></div>
           <button className="secondary" onClick={downloadJson}>
-            <Download size={18} /> Export JSON
+            <Download size={18} /> {t.analysis.exportJson}
           </button>
           <button className="secondary" onClick={onReset}>
-            <RefreshCw size={18} /> New Match
+            <RefreshCw size={18} /> {t.analysis.newMatch}
           </button>
         </div>
 
         <div className="stat-card summary">
-          <h3>Summary</h3>
+          <h3>{t.analysis.summary}</h3>
           <div className="score-display">
             <div className="team">
               <span className="name">{match.ourTeamName}</span>
@@ -269,25 +278,25 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               <span className="val">{stats.opponentPoints}</span>
             </div>
           </div>
-          <p>Total points recorded: {stats.ourPoints + stats.opponentPoints}</p>
+          <p>{t.analysis.totalPoints}: {stats.ourPoints + stats.opponentPoints}</p>
         </div>
 
         <div className="stat-card">
-          <h3>Scoring Distribution</h3>
+          <h3>{t.analysis.scoringDist}</h3>
           <div className="chart-container">
             <Doughnut data={scoringData} options={getChartOptions('Scoring')} />
           </div>
         </div>
 
         <div className="stat-card">
-          <h3>Error Distribution</h3>
+          <h3>{t.analysis.errorDist}</h3>
           <div className="chart-container">
             <Doughnut data={errorData} options={getChartOptions('Errors')} />
           </div>
         </div>
 
         <div className="stat-card">
-          <h3>Receive Quality (A/B/C)</h3>
+          <h3>{t.analysis.receiveQualityDist}</h3>
           <div className="chart-container">
             <Pie data={receiveData} options={getChartOptions('Receive')} />
           </div>
@@ -295,7 +304,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
         {viewSetIndex === 'all' && (
           <div className="stat-card full-width">
-            <h3>Points Per Set</h3>
+            <h3>{t.analysis.pointsPerSet}</h3>
             <div className="chart-container bar">
               <Bar 
                 data={pointsPerSetData} 
@@ -334,39 +343,39 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
         )}
 
         <div className="stat-card full-width">
-          <h3>Detailed Stats</h3>
+          <h3>{t.analysis.detailedStats}</h3>
           <div className="stats-list">
             <div className="stat-item">
-              <span>Blocks:</span>
+              <span>{t.analysis.blocks}:</span>
               <span>{stats.scoring.block || 0} ({getPercent(stats.scoring.block || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Block Outs:</span>
+              <span>{t.analysis.blockOuts}:</span>
               <span>{stats.scoring.block_out || 0} ({getPercent(stats.scoring.block_out || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Spike Kills:</span>
+              <span>{t.analysis.spikeKills}:</span>
               <span>{stats.scoring.spike_kill || 0} ({getPercent(stats.scoring.spike_kill || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Aces:</span>
+              <span>{t.analysis.aces}:</span>
               <span>{stats.scoring.ace || 0} ({getPercent(stats.scoring.ace || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Set Dumps:</span>
+              <span>{t.analysis.setDumps}:</span>
               <span>{stats.scoring.set_dump || 0} ({getPercent(stats.scoring.set_dump || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Opponent Errors:</span>
+              <span>{t.analysis.opponentErrors}:</span>
               <span>{stats.scoring.opponent_error || 0} ({getPercent(stats.scoring.opponent_error || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Sideouts (scored first try):</span>
+              <span>{t.analysis.sideouts}:</span>
               <span>{stats.sideoutsScored} / {stats.totalReceptionRallies} ({getPercent(stats.sideoutsScored, stats.totalReceptionRallies)})</span>
             </div>
             <hr />
             <div className="stat-item">
-              <span>Receive Quality:</span>
+              <span>{t.analysis.receiveQuality}:</span>
               <span>
                 A: {getPercent(stats.receive.A, receiveTotal)} | 
                 B: {getPercent(stats.receive.B, receiveTotal)} | 
@@ -375,25 +384,25 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             </div>
             <hr />
             <div className="stat-item">
-              <span>Block out against us:</span>
+              <span>{t.analysis.blockOutAgainst}:</span>
               <span>{stats.errors.block_out_against || 0} ({getPercent(stats.errors.block_out_against || 0, stats.opponentPoints)})</span>
             </div>
             <div className="stat-item">
-              <span>Cover existed on blocks against us:</span>
+              <span>{t.analysis.coverExisted}:</span>
               <span>
-                {stats.protection.yes} Yes ({getPercent(stats.protection.yes, stats.protection.yes + stats.protection.no)}) /{" "}
-                {stats.protection.no} No ({getPercent(stats.protection.no, stats.protection.yes + stats.protection.no)})
+                {stats.protection.yes} {t.common.yes} ({getPercent(stats.protection.yes, stats.protection.yes + stats.protection.no)}) /{" "}
+                {stats.protection.no} {t.common.no} ({getPercent(stats.protection.no, stats.protection.yes + stats.protection.no)})
               </span>
             </div>
             <div className="stat-item">
-              <span>Opponent spike kills:</span>
+              <span>{t.analysis.opponentSpikeKills}:</span>
               <span>
-                {stats.goodSpikeAgainst} Good Spike ({getPercent(stats.goodSpikeAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)}) /{" "}
-                {stats.failedReceiveAgainst} Failed Receive ({getPercent(stats.failedReceiveAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)})
+                {stats.goodSpikeAgainst} {t.recording.goodSpike} ({getPercent(stats.goodSpikeAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)}) /{" "}
+                {stats.failedReceiveAgainst} {t.recording.failedReceive} ({getPercent(stats.failedReceiveAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)})
               </span>
             </div>
             <div className="stat-item">
-              <span>Points given to opponent:</span>
+              <span>{t.analysis.pointsGiven}:</span>
               <span>{unforcedErrors} ({getPercent(unforcedErrors, stats.opponentPoints)})</span>
             </div>
           </div>
@@ -401,7 +410,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
         {!isMatchOver && (
           <button className="stat-card primary-large full-width" onClick={() => onUpdate({ ...match, status: 'playing' })}>
-            <ChevronLeft size={18} /> Resume Match
+            <ChevronLeft size={18} /> {t.analysis.resumeMatch}
           </button>
         )}
       </div>
