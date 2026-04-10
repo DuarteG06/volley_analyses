@@ -60,10 +60,10 @@ function App() {
     <>
       {!match && <MatchSetup onStart={startNewMatch} onImport={importMatch} onShowUpdates={() => setShowUpdates(true)} />}
       {match && match.status === 'playing' && (
-        <LiveMatch match={match} onUpdate={updateMatch} onReset={resetMatch} onShowUpdates={() => setShowUpdates(true)} />
+        <LiveMatch match={match} onUpdate={updateMatch} onReset={resetMatch} />
       )}
       {match && match.status === 'finished' && (
-        <Analysis match={match} onReset={resetMatch} onUpdate={updateMatch} onShowUpdates={() => setShowUpdates(true)} />
+        <Analysis match={match} onReset={resetMatch} onUpdate={updateMatch} />
       )}
       
       {showResetConfirm && (

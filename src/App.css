@@ -388,18 +388,11 @@ hr {
 
 .analysis-header .back-button {
   position: absolute;
-  left: 120px;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
   color: #ffffff;
-}
-
-.analysis-updates-btn {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .analysis-lang-btn {
@@ -551,14 +544,6 @@ hr {
 }
 
 @media (max-width: 600px) {
-  .analysis-header {
-    padding: 0 72px;
-  }
-
-  .analysis-header .back-button {
-    left: 88px;
-  }
-
   .header-info-btn {
     padding: 0.35rem 0.55rem;
     font-size: 0.8rem;

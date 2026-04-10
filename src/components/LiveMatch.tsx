@@ -8,10 +8,9 @@ interface Props {
   match: MatchData;
   onUpdate: (updated: MatchData) => void;
   onReset: () => void;
-  onShowUpdates: () => void;
 }
 
-const LiveMatch: FC<Props> = ({ match, onUpdate, onReset, onShowUpdates }) => {
+const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
   const { t, language, setLanguage } = useLanguage();
   const [recordingTeam, setRecordingTeam] = useState<Team | null>(null);
   const [isSwapped, setIsSwapped] = useState(false);
@@ -125,9 +124,6 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset, onShowUpdates }) => {
     <div className="live-match-container">
       <header className="match-header">
         <div className="header-side left">
-          <button className="header-info-btn" onClick={onShowUpdates} type="button">
-            {t.updates.button}
-          </button>
           <button className="icon-button" onClick={onReset} title={t.live.resetMatch}>
             <RotateCcw size={20} />
           </button>
