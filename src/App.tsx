@@ -16,6 +16,7 @@ function App() {
     return saved ? JSON.parse(saved) : null;
   });
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showUpdates, setShowUpdates] = useState(false);
 
   useEffect(() => {
     if (match) {
@@ -57,12 +58,12 @@ function App() {
 
   return (
     <>
-      {!match && <MatchSetup onStart={startNewMatch} onImport={importMatch} />}
+      {!match && <MatchSetup onStart={startNewMatch} onImport={importMatch} onShowUpdates={() => setShowUpdates(true)} />}
       {match && match.status === 'playing' && (
-        <LiveMatch match={match} onUpdate={updateMatch} onReset={resetMatch} />
+        <LiveMatch match={match} onUpdate={updateMatch} onReset={resetMatch} onShowUpdates={() => setShowUpdates(true)} />
       )}
       {match && match.status === 'finished' && (
-        <Analysis match={match} onReset={resetMatch} onUpdate={updateMatch} />
+        <Analysis match={match} onReset={resetMatch} onUpdate={updateMatch} onShowUpdates={() => setShowUpdates(true)} />
       )}
       
       {showResetConfirm && (
@@ -75,6 +76,22 @@ function App() {
           onCancel={() => setShowResetConfirm(false)}
           isDanger={true}
         />
+      )}
+
+      {showUpdates && (
+        <div className="modal-overlay" onClick={() => setShowUpdates(false)}>
+          <div className="modal-content updates-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>{t.updates.title}</h2>
+            <ul className="updates-list">
+              {t.updates.items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <button className="secondary" onClick={() => setShowUpdates(false)} type="button">
+              {t.common.cancel}
+            </button>
+          </div>
+        </div>
       )}
     </>
   );

@@ -31,6 +31,20 @@ body {
   position: relative;
 }
 
+.header-info-btn {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.header-info-btn:hover {
+  background: rgba(51, 65, 85, 0.98);
+}
+
 .lang-btn {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -325,6 +339,23 @@ hr {
   color: var(--secondary);
 }
 
+.updates-modal {
+  max-width: 520px;
+}
+
+.updates-intro {
+  margin-bottom: 1rem;
+  color: var(--secondary);
+}
+
+.updates-list {
+  margin: 0 0 1.5rem 1.25rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 /* Analysis */
 .analysis-container {
   display: flex;
@@ -357,11 +388,18 @@ hr {
 
 .analysis-header .back-button {
   position: absolute;
-  left: 0;
+  left: 120px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
   color: #ffffff;
+}
+
+.analysis-updates-btn {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .analysis-lang-btn {
@@ -513,6 +551,19 @@ hr {
 }
 
 @media (max-width: 600px) {
+  .analysis-header {
+    padding: 0 72px;
+  }
+
+  .analysis-header .back-button {
+    left: 88px;
+  }
+
+  .header-info-btn {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.8rem;
+  }
+
   .scoreboard {
     padding: 1rem;
   }

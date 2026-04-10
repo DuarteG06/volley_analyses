@@ -9,6 +9,11 @@ export type Translations = {
     no: string;
     set: string;
   };
+  updates: {
+    button: string;
+    title: string;
+    items: string[];
+  };
   setup: {
     title: string;
     subtitle: string;
@@ -109,6 +114,19 @@ export const en: Translations = {
     yes: "Yes",
     no: "No",
     set: "SET",
+  },
+  updates: {
+    button: "Last updates",
+    title: "Recent updates",
+    items: [
+      "Portuguese language support",
+      "Sideout statistics",
+      "App now has icons",
+      "App works as a web app and can be installed",
+      "Added block out option for both teams and detailed block out stats",
+      "New colors on the graphs",
+      "Small user interface improvements",
+    ],
   },
   setup: {
     title: "Volleyball Match Analysis",

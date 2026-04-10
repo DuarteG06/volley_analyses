@@ -60,9 +60,10 @@ interface Props {
   match: MatchData;
   onReset: () => void;
   onUpdate: (updated: MatchData) => void;
+  onShowUpdates: () => void;
 }
 
-const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
+const Analysis: FC<Props> = ({ match, onReset, onUpdate, onShowUpdates }) => {
   const { t, language, setLanguage } = useLanguage();
   const [viewSetIndex, setViewSetIndex] = useState<number | 'all'>('all');
 
@@ -229,6 +230,9 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     <div className="analysis-container">
       <div className="stats-grid">
         <header className="analysis-header stat-card full-width">
+          <button className="analysis-updates-btn header-info-btn" onClick={onShowUpdates} type="button">
+            {t.updates.button}
+          </button>
           {!isMatchOver && (
             <button className="back-button icon-button" onClick={() => onUpdate({ ...match, status: 'playing' })} title={t.analysis.backToMatch}>
               <ChevronLeft size={24} />

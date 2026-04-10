@@ -6,9 +6,10 @@ import { useLanguage } from '../languages/LanguageContext';
 interface Props {
   onStart: (type: MatchType, initialServer: Team, ourTeamName: string, opponentTeamName: string) => void;
   onImport: (data: MatchData) => void;
+  onShowUpdates: () => void;
 }
 
-const MatchSetup: FC<Props> = ({ onStart, onImport }) => {
+const MatchSetup: FC<Props> = ({ onStart, onImport, onShowUpdates }) => {
   const { t, language, setLanguage } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [ourTeamName, setOurTeamName] = useState(t.setup.ourTeamDefault);
@@ -50,7 +51,11 @@ const MatchSetup: FC<Props> = ({ onStart, onImport }) => {
     <div className="setup-container">
       <div className="card">
         <header className="match-header" style={{ marginBottom: '1rem' }}>
-          <div className="header-side left"></div>
+          <div className="header-side left">
+            <button onClick={onShowUpdates} className="header-info-btn" type="button">
+              {t.updates.button}
+            </button>
+          </div>
           <div className="header-side right">
             <button onClick={toggleLanguage} className="lang-btn">
               {language === 'en' ? 'PT' : 'EN'}

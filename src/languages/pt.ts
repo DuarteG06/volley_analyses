@@ -11,6 +11,19 @@ export const pt: Translations = {
     no: "Não",
     set: "SET",
   },
+  updates: {
+    button: "Últimas atualizações",
+    title: "Atualizações recentes",
+    items: [
+      "Suporte para português",
+      "Estatísticas de sideout",
+      "A app agora tem ícones",
+      "A app funciona como aplicação web e pode ser instalada",
+      "Adicionada a opção de block out para ambas as equipas e estatísticas detalhadas de block out",
+      "Novas cores nos gráficos",
+      "Pequenas melhorias na interface",
+    ],
+  },
   setup: {
     title: "Análise de Jogos de Voleibol",
     subtitle: "Inicie um novo jogo ou importe dados existentes",
