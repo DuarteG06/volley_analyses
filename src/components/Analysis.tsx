@@ -1,4 +1,4 @@
-import { useState, useMemo, type FC } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type FC } from 'react';
 import type { MatchData } from '../types';
 import { Doughnut, Bar, Pie } from 'react-chartjs-2';
 import {
@@ -65,10 +65,44 @@ interface Props {
 const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   const { t, language, setLanguage } = useLanguage();
   const [viewSetIndex, setViewSetIndex] = useState<number | 'all'>('all');
+  const [viewSelectorFits, setViewSelectorFits] = useState(false);
+  const viewSelectorRef = useRef<HTMLDivElement>(null);
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'pt' : 'en');
   };
+
+  useLayoutEffect(() => {
+    const viewSelector = viewSelectorRef.current;
+
+    if (!viewSelector) {
+      return;
+    }
+
+    const updateViewSelectorFit = () => {
+      setViewSelectorFits(viewSelector.scrollWidth <= viewSelector.clientWidth + 1);
+    };
+
+    updateViewSelectorFit();
+
+    const handleResize = () => {
+      window.requestAnimationFrame(updateViewSelectorFit);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    let resizeObserver: ResizeObserver | undefined;
+
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(updateViewSelectorFit);
+      resizeObserver.observe(viewSelector);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      resizeObserver?.disconnect();
+    };
+  }, [language, match.sets.length]);
 
   const isMatchOver = useMemo(() => {
     const ourSetsWon = match.sets.filter(s => s.finished && s.ourScore > s.opponentScore).length;
@@ -240,7 +274,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           </button>
         </header>
 
-        <div className="view-selector stat-card full-width">
+        <div
+          className={`view-selector stat-card full-width${viewSelectorFits ? ' view-selector-fit' : ''}`}
+          ref={viewSelectorRef}
+        >
           <button 
             className={viewSetIndex === 'all' ? 'active' : ''} 
             onClick={() => setViewSetIndex('all')}

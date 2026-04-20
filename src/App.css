@@ -419,6 +419,10 @@ hr {
   box-shadow: none;
 }
 
+.view-selector.stat-card.view-selector-fit {
+  padding-left: 0;
+}
+
 .view-selector::-webkit-scrollbar {
   display: none;
 }
