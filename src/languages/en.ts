@@ -71,6 +71,20 @@ export type Translations = {
     pointsPerSet: string;
     ourScore: string;
     opponentScore: string;
+    setScoreFlow: string;
+    fullView: string;
+    precisionView: string;
+    visiblePoints: string;
+    clickPointHint: string;
+    noPointsInSet: string;
+    pointDetails: string;
+    pointLabel: string;
+    scoredBy: string;
+    servingTeam: string;
+    reasonLabel: string;
+    scoreAfterPoint: string;
+    setFlowXAxis: string;
+    setFlowYAxis: string;
     detailedStats: string;
     blocks: string;
     blockOuts: string;
@@ -119,6 +133,7 @@ export const en: Translations = {
     button: "Last updates",
     title: "Recent updates",
     items: [
+      "New per set point graph",
       "Portuguese language support",
       "Sideout statistics",
       "App now has icons",
@@ -185,6 +200,20 @@ export const en: Translations = {
     pointsPerSet: "Points per Set",
     ourScore: "Our Score",
     opponentScore: "Opponent's Score",
+    setScoreFlow: "Set Score Flow",
+    fullView: "Full View",
+    precisionView: "Precision View",
+    visiblePoints: "Visible points",
+    clickPointHint: "Click any point in the line to see how it was scored.",
+    noPointsInSet: "No points have been recorded in this set yet.",
+    pointDetails: "Point Details",
+    pointLabel: "Point",
+    scoredBy: "Scored by",
+    servingTeam: "Serving team",
+    reasonLabel: "Reason",
+    scoreAfterPoint: "Score after point",
+    setFlowXAxis: "Points played in the set",
+    setFlowYAxis: "Score up to the winning total",
     detailedStats: "Detailed Stats",
     blocks: "Blocks",
     blockOuts: "Block Outs",
