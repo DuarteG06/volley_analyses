@@ -541,7 +541,6 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     };
 
     suppressTimelineClickRef.current = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handleTimelinePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -579,7 +578,6 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
     dragStateRef.current = null;
     setIsTimelineDragging(false);
-    event.currentTarget.releasePointerCapture(event.pointerId);
   };
 
   const selectedPointTags = useMemo(() => {
