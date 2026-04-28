@@ -89,6 +89,7 @@ export type Translations = {
     blocks: string;
     blockOuts: string;
     spikeKills: string;
+    spikeTips: string;
     aces: string;
     setDumps: string;
     opponentErrors: string;
@@ -97,6 +98,7 @@ export type Translations = {
     blockOutAgainst: string;
     coverExisted: string;
     opponentSpikeKills: string;
+    opponentSpikeTips: string;
     pointsGiven: string;
     resumeMatch: string;
   };
@@ -104,12 +106,14 @@ export type Translations = {
     block: string;
     block_out: string;
     spike_kill: string;
+    spike_tip: string;
     ace: string;
     set_dump: string;
     opponent_error: string;
     block_against: string;
     block_out_against: string;
     spike_kill_against: string;
+    spike_tip_against: string;
     missed_free_ball: string;
     ball_into_net: string;
     ball_out_of_bounds: string;
@@ -133,6 +137,7 @@ export const en: Translations = {
     button: "Last updates",
     title: "Recent updates",
     items: [
+      "Spike tip point option",
       "New per set point graph",
       "Portuguese language support",
       "Sideout statistics",
@@ -218,6 +223,7 @@ export const en: Translations = {
     blocks: "Blocks",
     blockOuts: "Block Outs",
     spikeKills: "Spike Kills",
+    spikeTips: "Spike Tips",
     aces: "Aces",
     setDumps: "Set Dumps",
     opponentErrors: "Opponent Errors",
@@ -226,6 +232,7 @@ export const en: Translations = {
     blockOutAgainst: "Block out against us",
     coverExisted: "There was cover on blocks against us",
     opponentSpikeKills: "Spike kills by opponent",
+    opponentSpikeTips: "Spike tips by opponent",
     pointsGiven: "Points given to opponent",
     resumeMatch: "Resume Match",
   },
@@ -233,12 +240,14 @@ export const en: Translations = {
     block: "Block",
     block_out: "Block Out",
     spike_kill: "Spike Kill",
+    spike_tip: "Spike Tip",
     ace: "Ace",
     set_dump: "Set Dump",
     opponent_error: "Opponent Error",
     block_against: "Block Against Us",
     block_out_against: "Block Out Against Us",
     spike_kill_against: "Spike Kill Against Us",
+    spike_tip_against: "Spike Tip Against Us",
     missed_free_ball: "Missed Free Ball",
     ball_into_net: "Ball into Net",
     ball_out_of_bounds: "Ball Out of Bounds",

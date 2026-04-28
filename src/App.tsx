@@ -6,6 +6,7 @@ import LiveMatch from './components/LiveMatch';
 import Analysis from './components/Analysis';
 import ConfirmationModal from './components/ConfirmationModal';
 import { useLanguage } from './languages/LanguageContext';
+import { normalizeMatchData, serializeMatch } from './matchPersistence';
 
 const STORAGE_KEY = 'volleyball_match_data';
 
@@ -13,14 +14,24 @@ function App() {
   const { t } = useLanguage();
   const [match, setMatch] = useState<MatchData | null>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
+
+    if (!saved) {
+      return null;
+    }
+
+    try {
+      return normalizeMatchData(JSON.parse(saved));
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
   });
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showUpdates, setShowUpdates] = useState(false);
 
   useEffect(() => {
     if (match) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(match));
+      localStorage.setItem(STORAGE_KEY, serializeMatch(match));
     }
   }, [match]);
 
@@ -52,8 +63,8 @@ function App() {
     setMatch(updated);
   };
 
-  const importMatch = (data: MatchData) => {
-    setMatch(data);
+  const importMatch = (data: unknown) => {
+    setMatch(normalizeMatchData(data));
   };
 
   return (

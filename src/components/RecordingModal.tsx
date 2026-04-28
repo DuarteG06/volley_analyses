@@ -105,6 +105,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
             <button onClick={() => handleReasonClick('block')}>{t.reasons.block}</button>
             <button onClick={() => handleReasonClick('block_out')}>{t.reasons.block_out}</button>
             <button onClick={() => handleReasonClick('spike_kill')}>{t.reasons.spike_kill}</button>
+            <button onClick={() => handleReasonClick('spike_tip')}>{t.reasons.spike_tip}</button>
             <button onClick={() => handleReasonClick('ace')}>{t.reasons.ace}</button>
             <button onClick={() => handleReasonClick('set_dump')}>{t.reasons.set_dump}</button>
             <button onClick={() => handleReasonClick('opponent_error')}>{t.reasons.opponent_error}</button>
@@ -116,6 +117,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
             <button onClick={() => handleReasonClick('block_against')}>{t.reasons.block_against}</button>
             <button onClick={() => handleReasonClick('block_out_against')}>{t.reasons.block_out_against}</button>
             <button onClick={() => handleReasonClick('spike_kill_against')}>{t.reasons.spike_kill_against}</button>
+            <button onClick={() => handleReasonClick('spike_tip_against')}>{t.reasons.spike_tip_against}</button>
             <button onClick={() => handleReasonClick('missed_free_ball')}>{t.reasons.missed_free_ball}</button>
             <button onClick={() => handleReasonClick('ball_into_net')}>{t.reasons.ball_into_net}</button>
             <button onClick={() => handleReasonClick('ball_out_of_bounds')}>{t.reasons.ball_out_of_bounds}</button>
@@ -131,6 +133,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
             <button onClick={() => handleReasonClick('block')}>{t.reasons.block}</button>
             <button onClick={() => handleReasonClick('block_out')}>{t.reasons.block_out}</button>
             <button onClick={() => handleReasonClick('spike_kill')}>{t.reasons.spike_kill}</button>
+            <button onClick={() => handleReasonClick('spike_tip')}>{t.reasons.spike_tip}</button>
             <button onClick={() => handleReasonClick('set_dump')}>{t.reasons.set_dump}</button>
             <button onClick={() => handleReasonClick('serve_miss')}>{t.reasons.serve_miss}</button>
             <button onClick={() => handleReasonClick('opponent_error')}>{t.reasons.opponent_error}</button>
@@ -142,6 +145,7 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
             <button onClick={() => handleReasonClick('block_against')}>{t.reasons.block_against}</button>
             <button onClick={() => handleReasonClick('block_out_against')}>{t.reasons.block_out_against}</button>
             <button onClick={() => handleReasonClick('spike_kill_against')}>{t.reasons.spike_kill_against}</button>
+            <button onClick={() => handleReasonClick('spike_tip_against')}>{t.reasons.spike_tip_against}</button>
             <button onClick={() => handleReasonClick('ace')}>{t.reasons.ace}</button>
             <button onClick={() => handleReasonClick('missed_free_ball')}>{t.reasons.missed_free_ball}</button>
             <button onClick={() => handleReasonClick('ball_into_net')}>{t.reasons.ball_into_net}</button>

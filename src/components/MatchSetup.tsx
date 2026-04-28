@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect, type FC, type ChangeEvent } from 'react';
-import type { MatchData, MatchType, Team } from '../types';
+import type { MatchType, Team } from '../types';
 import { Upload, Trophy } from 'lucide-react';
 import { useLanguage } from '../languages/LanguageContext';
 
 interface Props {
   onStart: (type: MatchType, initialServer: Team, ourTeamName: string, opponentTeamName: string) => void;
-  onImport: (data: MatchData) => void;
+  onImport: (data: unknown) => void;
   onShowUpdates: () => void;
 }
 

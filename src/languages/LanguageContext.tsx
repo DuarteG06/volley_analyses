@@ -24,7 +24,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('app_language', lang);
   };
 
-  const t = language === 'en' ? en : pt;
+  const t: Translations = language === 'en' ? en : pt;
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

@@ -19,6 +19,7 @@ import {
 } from 'chart.js';
 import { Download, RefreshCw, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../languages/LanguageContext';
+import { serializeMatch } from '../matchPersistence';
 
 ChartJS.register(
   ArcElement,
@@ -35,12 +36,14 @@ ChartJS.register(
 const ACTION_COLORS: Record<string, string> = {
   ace: '#4ade80',
   spike_kill: '#60a5fa',
+  spike_tip: '#0ea5e9',
   block: '#a78bfa',
   block_out: '#2dd4bf',
   set_dump: '#facc15',
   opponent_error: '#818cf8',
   serve_miss: '#ef4444',
   spike_kill_against: '#f87171',
+  spike_tip_against: '#f43f5e',
   block_against: '#fb923c',
   block_out_against: '#f472b6',
   missed_free_ball: '#fbbf24',
@@ -49,10 +52,11 @@ const ACTION_COLORS: Record<string, string> = {
   bad_set: '#38bdf8',
 };
 
-const SCORING_ORDER = ['ace', 'spike_kill', 'block', 'block_out', 'set_dump', 'opponent_error'] as const;
+const SCORING_ORDER = ['ace', 'spike_kill', 'spike_tip', 'block', 'block_out', 'set_dump', 'opponent_error'] as const;
 const ERROR_ORDER = [
   'serve_miss',
   'spike_kill_against',
+  'spike_tip_against',
   'block_against',
   'block_out_against',
   'missed_free_ball',
@@ -369,7 +373,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           borderColor: '#3b82f6',
           backgroundColor: '#3b82f6',
           borderWidth: 3,
-          tension: 0.18,
+          tension: 0,
           pointRadius: context => getTimelinePointRadius(context, selectedTimelineEventIndex, setGraphMode),
           pointHoverRadius: 8,
           pointHitRadius: 14,
@@ -381,7 +385,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           borderColor: '#ef4444',
           backgroundColor: '#ef4444',
           borderWidth: 3,
-          tension: 0.18,
+          tension: 0,
           pointRadius: context => getTimelinePointRadius(context, selectedTimelineEventIndex, setGraphMode),
           pointHoverRadius: 8,
           pointHitRadius: 14,
@@ -665,7 +669,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   };
 
   const downloadJson = () => {
-    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(match))}`;
+    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(serializeMatch(match))}`;
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute('href', dataStr);
     downloadAnchorNode.setAttribute('download', `${match.ourTeamName} vs ${match.opponentTeamName}.json`);
@@ -920,6 +924,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               <span>{stats.scoring.spike_kill || 0} ({getPercent(stats.scoring.spike_kill || 0, stats.ourPoints)})</span>
             </div>
             <div className="stat-item">
+              <span>{t.analysis.spikeTips}:</span>
+              <span>{stats.scoring.spike_tip || 0} ({getPercent(stats.scoring.spike_tip || 0, stats.ourPoints)})</span>
+            </div>
+            <div className="stat-item">
               <span>{t.analysis.aces}:</span>
               <span>{stats.scoring.ace || 0} ({getPercent(stats.scoring.ace || 0, stats.ourPoints)})</span>
             </div>
@@ -962,6 +970,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
                 {stats.goodSpikeAgainst} {t.recording.goodSpike} ({getPercent(stats.goodSpikeAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)}) /{' '}
                 {stats.failedReceiveAgainst} {t.recording.failedReceive} ({getPercent(stats.failedReceiveAgainst, stats.goodSpikeAgainst + stats.failedReceiveAgainst)})
               </span>
+            </div>
+            <div className="stat-item">
+              <span>{t.analysis.opponentSpikeTips}:</span>
+              <span>{stats.errors.spike_tip_against || 0} ({getPercent(stats.errors.spike_tip_against || 0, stats.opponentPoints)})</span>
             </div>
             <div className="stat-item">
               <span>{t.analysis.pointsGiven}:</span>
