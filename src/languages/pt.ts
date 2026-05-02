@@ -3,6 +3,7 @@ import type { Translations } from './en';
 export const pt: Translations = {
   common: {
     cancel: "Cancelar",
+    back: "Voltar",
     confirm: "Sim, Iniciar Novo Jogo",
     errorImport: "Erro ao importar dados do jogo. JSON inválido.",
     newMatchQuestion: "Novo Jogo?",
@@ -15,6 +16,7 @@ export const pt: Translations = {
     button: "Últimas atualizações",
     title: "Atualizações recentes",
     items: [
+      "Faltas",
       "Opção de ponto por amorti",
       "Novo gráfico de pontos por set",
       "Suporte para português",
@@ -65,6 +67,10 @@ export const pt: Translations = {
     whyDidTheyScore: "Porque marcaram ponto?",
     goodSpike: "Bom Remate",
     failedReceive: "Falha na Receção",
+    error: "Erro",
+    errorDetail: "Que erro causou o ponto?",
+    fault: "Falta",
+    faultDetail: "Que falta causou o ponto?",
     passA: "Passe A",
     passB: "Passe B",
     passC: "Passe C",
@@ -111,6 +117,7 @@ export const pt: Translations = {
     coverExisted: "Houve cobertura em blocos contra nós",
     opponentSpikeKills: "Remates ganhos pelo adversário",
     opponentSpikeTips: "Amortis do adversário",
+    faults: "Faltas",
     pointsGiven: "Pontos dados ao adversário",
     resumeMatch: "Retomar Jogo",
   },
@@ -131,5 +138,11 @@ export const pt: Translations = {
     ball_out_of_bounds: "Bola Fora",
     bad_set: "Mau Set",
     serve_miss: "Erro de Serviço",
+    net_touch: "Toque na Rede",
+    backline_fault: "Falta na Linha dos 3 metros",
+    center_line_violation: "Violação da Linha Central",
+    over_the_net_fault: "Invasão por cima da rede",
+    four_touches: "4 Toques",
+    double_touch: "Duplo Toque",
   }
 };

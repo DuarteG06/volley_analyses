@@ -25,7 +25,13 @@ export type PointReason =
   | 'ball_into_net'
   | 'ball_out_of_bounds'
   | 'bad_set'
-  | 'serve_miss';
+  | 'serve_miss'
+  | 'net_touch'
+  | 'backline_fault'
+  | 'center_line_violation'
+  | 'over_the_net_fault'
+  | 'four_touches'
+  | 'double_touch';
 
 export interface MatchEvent {
   id: string;

@@ -9,7 +9,23 @@ interface Props {
   onCancel: () => void;
 }
 
-type Step = 'reason' | 'receive' | 'sideout' | 'extra';
+type Step = 'reason' | 'error' | 'fault' | 'receive' | 'sideout' | 'extra';
+
+const FAULT_REASONS: PointReason[] = [
+  'net_touch',
+  'backline_fault',
+  'center_line_violation',
+  'over_the_net_fault',
+  'four_touches',
+  'double_touch',
+];
+
+const ERROR_REASONS: PointReason[] = [
+  'missed_free_ball',
+  'ball_into_net',
+  'ball_out_of_bounds',
+  'bad_set',
+];
 
 const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCancel }) => {
   const { t } = useLanguage();
@@ -118,11 +134,8 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
             <button onClick={() => handleReasonClick('block_out_against')}>{t.reasons.block_out_against}</button>
             <button onClick={() => handleReasonClick('spike_kill_against')}>{t.reasons.spike_kill_against}</button>
             <button onClick={() => handleReasonClick('spike_tip_against')}>{t.reasons.spike_tip_against}</button>
-            <button onClick={() => handleReasonClick('missed_free_ball')}>{t.reasons.missed_free_ball}</button>
-            <button onClick={() => handleReasonClick('ball_into_net')}>{t.reasons.ball_into_net}</button>
-            <button onClick={() => handleReasonClick('ball_out_of_bounds')}>{t.reasons.ball_out_of_bounds}</button>
-            <button onClick={() => handleReasonClick('bad_set')}>{t.reasons.bad_set}</button>
-            <button onClick={() => handleReasonClick('serve_miss')}>{t.reasons.serve_miss}</button>
+            <button onClick={() => setStep('error')}>{t.recording.error}</button>
+            <button className="fault-selector-button" onClick={() => setStep('fault')}>{t.recording.fault}</button>
           </div>
         );
       }
@@ -147,15 +160,37 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
             <button onClick={() => handleReasonClick('spike_kill_against')}>{t.reasons.spike_kill_against}</button>
             <button onClick={() => handleReasonClick('spike_tip_against')}>{t.reasons.spike_tip_against}</button>
             <button onClick={() => handleReasonClick('ace')}>{t.reasons.ace}</button>
-            <button onClick={() => handleReasonClick('missed_free_ball')}>{t.reasons.missed_free_ball}</button>
-            <button onClick={() => handleReasonClick('ball_into_net')}>{t.reasons.ball_into_net}</button>
-            <button onClick={() => handleReasonClick('ball_out_of_bounds')}>{t.reasons.ball_out_of_bounds}</button>
-            <button onClick={() => handleReasonClick('bad_set')}>{t.reasons.bad_set}</button>
+            <button onClick={() => setStep('error')}>{t.recording.error}</button>
+            <button className="fault-selector-button" onClick={() => setStep('fault')}>{t.recording.fault}</button>
           </div>
         );
       }
     }
   };
+
+  const renderErrorReasons = () => {
+    const reasons = servingTeam === 'us' ? [...ERROR_REASONS, 'serve_miss' as PointReason] : ERROR_REASONS;
+
+    return (
+      <div className="button-grid">
+        {reasons.map(reason => (
+          <button key={reason} onClick={() => handleReasonClick(reason)}>
+            {t.reasons[reason]}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  const renderFaultReasons = () => (
+    <div className="button-grid">
+      {FAULT_REASONS.map(reason => (
+        <button key={reason} onClick={() => handleReasonClick(reason)}>
+          {t.reasons[reason]}
+        </button>
+      ))}
+    </div>
+  );
 
   const renderReceiveStep = () => (
     <div className="details-prompt">
@@ -213,17 +248,24 @@ const RecordingModal: FC<Props> = ({ scoringTeam, servingTeam, onConfirm, onCanc
         <h2>{scoringTeam === 'us' ? t.recording.ourPoint : t.recording.opponentPoint}</h2>
         <p>
           {step === 'reason' && t.recording.howItHappened}
+          {step === 'error' && t.recording.errorDetail}
+          {step === 'fault' && t.recording.faultDetail}
           {step === 'receive' && t.recording.receiveQualityDetail}
           {step === 'sideout' && t.recording.sideoutDetail}
           {step === 'extra' && t.recording.additionalDetails}
         </p>
         
         {step === 'reason' && renderReasons()}
+        {step === 'error' && renderErrorReasons()}
+        {step === 'fault' && renderFaultReasons()}
         {step === 'receive' && renderReceiveStep()}
         {step === 'sideout' && renderSideoutStep()}
         {step === 'extra' && renderExtraStep()}
         
         <div className="modal-footer">
+          {(step === 'error' || step === 'fault') && (
+            <button className="text-button" onClick={() => setStep('reason')}>{t.common.back}</button>
+          )}
           <button className="text-button" onClick={onCancel}>{t.common.cancel}</button>
         </div>
       </div>

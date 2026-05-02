@@ -50,9 +50,23 @@ const ACTION_COLORS: Record<string, string> = {
   ball_into_net: '#fb7185',
   ball_out_of_bounds: '#c084fc',
   bad_set: '#38bdf8',
+  net_touch: '#f97316',
+  backline_fault: '#84cc16',
+  center_line_violation: '#14b8a6',
+  over_the_net_fault: '#a855f7',
+  four_touches: '#06b6d4',
+  double_touch: '#e879f9',
 };
 
 const SCORING_ORDER = ['ace', 'spike_kill', 'spike_tip', 'block', 'block_out', 'set_dump', 'opponent_error'] as const;
+const FAULT_ORDER = [
+  'net_touch',
+  'backline_fault',
+  'center_line_violation',
+  'over_the_net_fault',
+  'four_touches',
+  'double_touch',
+] as const;
 const ERROR_ORDER = [
   'serve_miss',
   'spike_kill_against',
@@ -62,7 +76,8 @@ const ERROR_ORDER = [
   'missed_free_ball',
   'ball_into_net',
   'ball_out_of_bounds',
-  'bad_set'
+  'bad_set',
+  ...FAULT_ORDER
 ] as const;
 
 const SET_TIMELINE_WINDOW = 10;
@@ -619,11 +634,13 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   };
 
   const receiveTotal = stats.receive.A + stats.receive.B + stats.receive.C;
+  const faultErrors = FAULT_ORDER.reduce((total, key) => total + (stats.errors[key] || 0), 0);
   const unforcedErrors = (stats.errors.missed_free_ball || 0) +
     (stats.errors.ball_into_net || 0) +
     (stats.errors.ball_out_of_bounds || 0) +
     (stats.errors.bad_set || 0) +
-    (stats.errors.serve_miss || 0);
+    (stats.errors.serve_miss || 0) +
+    faultErrors;
 
   const scoringKeys = SCORING_ORDER.filter(key => (stats.scoring[key] || 0) > 0);
   const scoringData = {
@@ -974,6 +991,10 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             <div className="stat-item">
               <span>{t.analysis.opponentSpikeTips}:</span>
               <span>{stats.errors.spike_tip_against || 0} ({getPercent(stats.errors.spike_tip_against || 0, stats.opponentPoints)})</span>
+            </div>
+            <div className="stat-item">
+              <span>{t.analysis.faults}:</span>
+              <span>{faultErrors} ({getPercent(faultErrors, stats.opponentPoints)})</span>
             </div>
             <div className="stat-item">
               <span>{t.analysis.pointsGiven}:</span>

@@ -311,6 +311,14 @@ hr {
   background: #475569;
 }
 
+.button-grid .fault-selector-button {
+  background: #7f1d1d;
+}
+
+.button-grid .fault-selector-button:hover {
+  background: #991b1b;
+}
+
 .details-prompt {
   margin: 1.5rem 0;
 }
@@ -331,7 +339,9 @@ hr {
 
 .modal-footer {
   margin-top: 1rem;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .text-button {

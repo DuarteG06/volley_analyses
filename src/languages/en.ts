@@ -1,6 +1,7 @@
 export type Translations = {
   common: {
     cancel: string;
+    back: string;
     confirm: string;
     errorImport: string;
     newMatchQuestion: string;
@@ -53,6 +54,10 @@ export type Translations = {
     whyDidTheyScore: string;
     goodSpike: string;
     failedReceive: string;
+    error: string;
+    errorDetail: string;
+    fault: string;
+    faultDetail: string;
     passA: string;
     passB: string;
     passC: string;
@@ -99,6 +104,7 @@ export type Translations = {
     coverExisted: string;
     opponentSpikeKills: string;
     opponentSpikeTips: string;
+    faults: string;
     pointsGiven: string;
     resumeMatch: string;
   };
@@ -119,12 +125,19 @@ export type Translations = {
     ball_out_of_bounds: string;
     bad_set: string;
     serve_miss: string;
+    net_touch: string;
+    backline_fault: string;
+    center_line_violation: string;
+    over_the_net_fault: string;
+    four_touches: string;
+    double_touch: string;
   };
 };
 
 export const en: Translations = {
   common: {
     cancel: "Cancel",
+    back: "Back",
     confirm: "Yes, Start New Match",
     errorImport: "Error importing match data. Invalid JSON.",
     newMatchQuestion: "New Match?",
@@ -137,6 +150,7 @@ export const en: Translations = {
     button: "Last updates",
     title: "Recent updates",
     items: [
+      "Faults",
       "Spike tip point option",
       "New per set point graph",
       "Portuguese language support",
@@ -187,6 +201,10 @@ export const en: Translations = {
     whyDidTheyScore: "Why did they score?",
     goodSpike: "Good Spike",
     failedReceive: "Failed Receive",
+    error: "Error",
+    errorDetail: "Which error caused the point?",
+    fault: "Fault",
+    faultDetail: "Which fault caused the point?",
     passA: "Pass A",
     passB: "Pass B",
     passC: "Pass C",
@@ -233,6 +251,7 @@ export const en: Translations = {
     coverExisted: "There was cover on blocks against us",
     opponentSpikeKills: "Spike kills by opponent",
     opponentSpikeTips: "Spike tips by opponent",
+    faults: "Faults",
     pointsGiven: "Points given to opponent",
     resumeMatch: "Resume Match",
   },
@@ -253,5 +272,11 @@ export const en: Translations = {
     ball_out_of_bounds: "Ball Out of Bounds",
     bad_set: "Bad Set",
     serve_miss: "Serve Miss",
+    net_touch: "Net Touch",
+    backline_fault: "Backline Fault",
+    center_line_violation: "Center Line Violation",
+    over_the_net_fault: "Over-the-Net Fault",
+    four_touches: "4 Touches",
+    double_touch: "Double Touch",
   }
 };
