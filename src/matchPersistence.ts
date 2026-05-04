@@ -1,4 +1,4 @@
-import type { EventDetails, MatchData, MatchEvent, PointReason, Team, VolleyballSet } from './types';
+import type { EventDetails, MatchData, MatchEvent, PointReason, Team, TimeoutEvent, VolleyballSet } from './types';
 
 const POINT_REASON_ALIASES: Record<string, PointReason> = {
   block: 'block',
@@ -91,14 +91,29 @@ const normalizeEvent = (event: unknown, index: number): MatchEvent => {
   };
 };
 
+const normalizeTimeout = (timeout: unknown, index: number): TimeoutEvent => {
+  const source = timeout && typeof timeout === 'object' ? (timeout as Record<string, unknown>) : {};
+
+  return {
+    id: typeof source.id === 'string' ? source.id : `timeout-${index}`,
+    timestamp: typeof source.timestamp === 'number' ? source.timestamp : Date.now(),
+    team: normalizeTeam(source.team),
+    pointIndex: typeof source.pointIndex === 'number' && source.pointIndex >= 0 ? Math.floor(source.pointIndex) : 0,
+    ourScore: typeof source.ourScore === 'number' && source.ourScore >= 0 ? Math.floor(source.ourScore) : 0,
+    opponentScore: typeof source.opponentScore === 'number' && source.opponentScore >= 0 ? Math.floor(source.opponentScore) : 0,
+  };
+};
+
 const normalizeSet = (setData: unknown): VolleyballSet => {
   const source = setData && typeof setData === 'object' ? (setData as Record<string, unknown>) : {};
   const events = Array.isArray(source.events) ? source.events.map(normalizeEvent) : [];
+  const timeouts = Array.isArray(source.timeouts) ? source.timeouts.map(normalizeTimeout) : [];
 
   return {
     ourScore: typeof source.ourScore === 'number' ? source.ourScore : 0,
     opponentScore: typeof source.opponentScore === 'number' ? source.opponentScore : 0,
     events,
+    timeouts,
     finished: source.finished === true,
   };
 };

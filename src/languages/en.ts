@@ -39,6 +39,9 @@ export type Translations = {
     point: string;
     undoLast: string;
     swapSides: string;
+    timeout: string;
+    timeoutTitle: string;
+    timeoutPrompt: string;
   };
   recording: {
     ourPoint: string;
@@ -90,6 +93,8 @@ export type Translations = {
     scoreAfterPoint: string;
     setFlowXAxis: string;
     setFlowYAxis: string;
+    timeoutLabel: string;
+    timeoutCalledBy: string;
     detailedStats: string;
     blocks: string;
     blockOuts: string;
@@ -150,6 +155,7 @@ export const en: Translations = {
     button: "Last updates",
     title: "Recent updates",
     items: [
+      "Timeouts",
       "Faults",
       "Spike tip point option",
       "New per set point graph",
@@ -186,6 +192,9 @@ export const en: Translations = {
     point: "POINT",
     undoLast: "Undo Last Point",
     swapSides: "Swap Sides",
+    timeout: "Timeout",
+    timeoutTitle: "Timeout",
+    timeoutPrompt: "Which team used the timeout?",
   },
   recording: {
     ourPoint: "Our Point!",
@@ -237,6 +246,8 @@ export const en: Translations = {
     scoreAfterPoint: "Score after point",
     setFlowXAxis: "Points played in the set",
     setFlowYAxis: "Score up to the winning total",
+    timeoutLabel: "Timeout",
+    timeoutCalledBy: "Timeout called by",
     detailedStats: "Detailed Stats",
     blocks: "Blocks",
     blockOuts: "Block Outs",

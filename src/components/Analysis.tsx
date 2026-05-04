@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FC, type PointerEvent as ReactPointerEvent } from 'react';
-import type { MatchData, MatchEvent, VolleyballSet } from '../types';
+import type { MatchData, MatchEvent, TimeoutEvent, VolleyballSet } from '../types';
 import { Doughnut, Bar, Pie, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -94,6 +94,7 @@ interface TimelinePoint {
   x: number;
   y: number;
   eventIndex: number | null;
+  timeout?: TimeoutEvent;
 }
 
 interface SetTimelineEntry {
@@ -106,12 +107,30 @@ interface SetTimelineEntry {
 interface SetTimelineData {
   ourLine: TimelinePoint[];
   opponentLine: TimelinePoint[];
+  timeoutPoints: TimelinePoint[];
   entries: SetTimelineEntry[];
   totalPoints: number;
+  timelineEnd: number;
   winningScore: number;
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+const getLineYAtX = (line: TimelinePoint[], x: number, fallbackY: number) => {
+  const nextPoint = line.find(point => point.x >= x);
+  const previousPoint = [...line].reverse().find(point => point.x <= x);
+
+  if (!previousPoint || !nextPoint) {
+    return fallbackY;
+  }
+
+  if (previousPoint.x === nextPoint.x) {
+    return previousPoint.y;
+  }
+
+  const progress = (x - previousPoint.x) / (nextPoint.x - previousPoint.x);
+  return previousPoint.y + ((nextPoint.y - previousPoint.y) * progress);
+};
 
 const buildSetTimeline = (setData: VolleyballSet): SetTimelineData => {
   let ourScore = 0;
@@ -119,6 +138,7 @@ const buildSetTimeline = (setData: VolleyballSet): SetTimelineData => {
 
   const ourLine: TimelinePoint[] = [{ x: 0, y: 0, eventIndex: null }];
   const opponentLine: TimelinePoint[] = [{ x: 0, y: 0, eventIndex: null }];
+  const timeoutPoints: TimelinePoint[] = [];
   const entries: SetTimelineEntry[] = [];
 
   setData.events.forEach((event, index) => {
@@ -150,12 +170,35 @@ const buildSetTimeline = (setData: VolleyballSet): SetTimelineData => {
     });
   });
 
+  (setData.timeouts ?? []).forEach(timeout => {
+    const timeoutPointIndex = clamp(timeout.pointIndex, 0, setData.events.length);
+    const timeoutX = timeoutPointIndex + 0.5;
+    const timeoutScore = timeout.team === 'us' ? timeout.ourScore : timeout.opponentScore;
+    const timeoutLine = timeout.team === 'us' ? ourLine : opponentLine;
+
+    timeoutPoints.push({
+      x: timeoutX,
+      y: getLineYAtX(timeoutLine, timeoutX, timeoutScore),
+      eventIndex: null,
+      timeout,
+    });
+  });
+
   return {
     ourLine,
     opponentLine,
+    timeoutPoints,
     entries,
     totalPoints: setData.events.length,
-    winningScore: Math.max(setData.ourScore, setData.opponentScore, ourScore, opponentScore, 1),
+    timelineEnd: Math.max(setData.events.length, ...timeoutPoints.map(point => point.x), 1),
+    winningScore: Math.max(
+      setData.ourScore,
+      setData.opponentScore,
+      ourScore,
+      opponentScore,
+      ...timeoutPoints.map(point => point.y),
+      1
+    ),
   };
 };
 
@@ -250,20 +293,23 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
   );
 
   const precisionWindow = selectedSetTimeline
-    ? Math.min(SET_TIMELINE_WINDOW, Math.max(selectedSetTimeline.totalPoints, 1))
+    ? Math.min(SET_TIMELINE_WINDOW, Math.max(Math.ceil(selectedSetTimeline.timelineEnd), 1))
     : 1;
 
   const maxPrecisionStart = selectedSetTimeline
-    ? Math.max(selectedSetTimeline.totalPoints - precisionWindow + 1, 1)
+    ? Math.max(Math.ceil(selectedSetTimeline.timelineEnd) - precisionWindow + 1, 1)
     : 1;
 
   const precisionEnd = selectedSetTimeline
-    ? Math.min(selectedSetTimeline.totalPoints, precisionStart + precisionWindow - 1)
+    ? Math.min(selectedSetTimeline.timelineEnd, precisionStart + precisionWindow - 1)
     : 1;
 
   const selectedTimelineEntry = selectedSetTimeline && selectedTimelineEventIndex !== null
     ? selectedSetTimeline.entries[selectedTimelineEventIndex] ?? null
     : null;
+
+  const hasSetTimelineItems = !!selectedSetTimeline &&
+    (selectedSetTimeline.totalPoints > 0 || selectedSetTimeline.timeoutPoints.length > 0);
 
   useEffect(() => {
     setSetGraphMode('full');
@@ -379,6 +425,9 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
       return { datasets: [] };
     }
 
+    const ourTimeoutPoints = selectedSetTimeline.timeoutPoints.filter(point => point.timeout?.team === 'us');
+    const opponentTimeoutPoints = selectedSetTimeline.timeoutPoints.filter(point => point.timeout?.team === 'opponent');
+
     return {
       datasets: [
         {
@@ -404,7 +453,31 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           pointRadius: context => getTimelinePointRadius(context, selectedTimelineEventIndex, setGraphMode),
           pointHoverRadius: 8,
           pointHitRadius: 14,
-        }
+        },
+        ...(ourTimeoutPoints.length > 0 ? [{
+          label: `${t.analysis.timeoutLabel} - ${match.ourTeamName}`,
+          data: ourTimeoutPoints,
+          parsing: false as const,
+          borderColor: '#ffffff',
+          backgroundColor: '#3b82f6',
+          showLine: false,
+          pointStyle: 'rectRot' as const,
+          pointRadius: 7,
+          pointHoverRadius: 9,
+          pointHitRadius: 14,
+        }] : []),
+        ...(opponentTimeoutPoints.length > 0 ? [{
+          label: `${t.analysis.timeoutLabel} - ${match.opponentTeamName}`,
+          data: opponentTimeoutPoints,
+          parsing: false as const,
+          borderColor: '#ffffff',
+          backgroundColor: '#ef4444',
+          showLine: false,
+          pointStyle: 'rectRot' as const,
+          pointRadius: 7,
+          pointHoverRadius: 9,
+          pointHitRadius: 14,
+        }] : []),
       ]
     };
   }, [
@@ -412,7 +485,8 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     match.ourTeamName,
     selectedSetTimeline,
     selectedTimelineEventIndex,
-    setGraphMode
+    setGraphMode,
+    t.analysis.timeoutLabel
   ]);
 
   const setTimelineOptions = useMemo<ChartOptions<'line'>>(() => {
@@ -422,8 +496,8 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
 
     const xAxisMin = setGraphMode === 'precision' ? Math.max(0, precisionStart - 1) : 0;
     const xAxisMax = setGraphMode === 'precision'
-      ? Math.min(selectedSetTimeline.totalPoints, precisionEnd)
-      : selectedSetTimeline.totalPoints;
+      ? Math.max(Math.min(selectedSetTimeline.timelineEnd, precisionEnd), 1)
+      : selectedSetTimeline.timelineEnd;
 
     return {
       responsive: true,
@@ -445,15 +519,32 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
             title: (items: TooltipItem<'line'>[]) => {
               const point = items[0]?.raw as TimelinePoint | undefined;
 
+              if (point?.timeout) {
+                return t.analysis.timeoutLabel;
+              }
+
               if (!point || point.eventIndex === null) {
                 return t.analysis.setScoreFlow;
               }
 
               return `${t.analysis.pointLabel} ${point.eventIndex + 1}`;
             },
-            label: (context: TooltipItem<'line'>) => `${context.dataset.label}: ${context.parsed.y}`,
+            label: (context: TooltipItem<'line'>) => {
+              const point = context.raw as TimelinePoint | undefined;
+
+              if (point?.timeout) {
+                const timeoutTeamName = point.timeout.team === 'us' ? match.ourTeamName : match.opponentTeamName;
+                return `${t.analysis.timeoutCalledBy}: ${timeoutTeamName}`;
+              }
+
+              return `${context.dataset.label}: ${context.parsed.y}`;
+            },
             afterBody: (items: TooltipItem<'line'>[]) => {
               const point = items[0]?.raw as TimelinePoint | undefined;
+
+              if (point?.timeout) {
+                return [];
+              }
 
               if (!point || point.eventIndex === null) {
                 return [];
@@ -477,7 +568,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
           return;
         }
 
-        const clickedPoint = activeElements.find(element => element.index > 0);
+        const clickedPoint = activeElements.find(element => element.datasetIndex < 2 && element.index > 0);
 
         if (!clickedPoint) {
           setSelectedTimelineEventIndex(null);
@@ -488,7 +579,7 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
         chart.canvas.style.cursor = 'pointer';
       },
       onHover: (_event, activeElements, chart) => {
-        const isClickablePoint = activeElements.some(element => element.index > 0);
+        const isClickablePoint = activeElements.some(element => element.datasetIndex < 2 && element.index > 0);
         chart.canvas.style.cursor = isClickablePoint ? 'pointer' : 'default';
       },
       scales: {
@@ -543,10 +634,12 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
     t.analysis.setFlowXAxis,
     t.analysis.setFlowYAxis,
     t.analysis.setScoreFlow,
+    t.analysis.timeoutCalledBy,
+    t.analysis.timeoutLabel,
     t.reasons
   ]);
 
-  const canDragTimeline = setGraphMode === 'precision' && !!selectedSetTimeline && selectedSetTimeline.totalPoints > precisionWindow;
+  const canDragTimeline = setGraphMode === 'precision' && !!selectedSetTimeline && selectedSetTimeline.timelineEnd > precisionWindow;
 
   const handleTimelinePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!canDragTimeline) {
@@ -844,9 +937,9 @@ const Analysis: FC<Props> = ({ match, onReset, onUpdate }) => {
               </div>
             </div>
 
-            {selectedSetTimeline && selectedSetTimeline.totalPoints > 0 ? (
+            {selectedSetTimeline && hasSetTimelineItems ? (
               <>
-                {setGraphMode === 'precision' && selectedSetTimeline.totalPoints > precisionWindow && (
+                {setGraphMode === 'precision' && selectedSetTimeline.timelineEnd > precisionWindow && (
                   <div className="timeline-slider-row">
                     <label htmlFor="set-timeline-range">
                       {t.analysis.visiblePoints}: {precisionStart}-{precisionEnd}

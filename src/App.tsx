@@ -44,7 +44,7 @@ function App() {
       initialServer,
       ourTeamName,
       opponentTeamName,
-      sets: [{ ourScore: 0, opponentScore: 0, events: [], finished: false }],
+      sets: [{ ourScore: 0, opponentScore: 0, events: [], timeouts: [], finished: false }],
     };
     setMatch(newMatch);
   };

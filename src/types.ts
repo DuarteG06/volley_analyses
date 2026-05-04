@@ -42,10 +42,20 @@ export interface MatchEvent {
   details: EventDetails;
 }
 
+export interface TimeoutEvent {
+  id: string;
+  timestamp: number;
+  team: Team;
+  pointIndex: number;
+  ourScore: number;
+  opponentScore: number;
+}
+
 export interface VolleyballSet {
   ourScore: number;
   opponentScore: number;
   events: MatchEvent[];
+  timeouts: TimeoutEvent[];
   finished: boolean;
 }
 

@@ -1,7 +1,7 @@
 import { useState, useMemo, type FC, Fragment } from 'react';
-import type { MatchData, Team, PointReason, EventDetails, MatchEvent } from '../types';
+import type { MatchData, Team, PointReason, EventDetails, MatchEvent, TimeoutEvent } from '../types';
 import RecordingModal from './RecordingModal';
-import { RotateCcw, BarChart2, Undo2, ArrowLeftRight } from 'lucide-react';
+import { RotateCcw, BarChart2, Undo2, ArrowLeftRight, Timer } from 'lucide-react';
 import { useLanguage } from '../languages/LanguageContext';
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
 const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
   const { t, language, setLanguage } = useLanguage();
   const [recordingTeam, setRecordingTeam] = useState<Team | null>(null);
+  const [isTimeoutPromptOpen, setIsTimeoutPromptOpen] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
 
   const toggleLanguage = () => {
@@ -89,12 +90,35 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
         updatedMatch.status = 'finished';
       } else {
         updatedMatch.currentSetIndex++;
-        updatedMatch.sets.push({ ourScore: 0, opponentScore: 0, events: [], finished: false });
+        updatedMatch.sets.push({ ourScore: 0, opponentScore: 0, events: [], timeouts: [], finished: false });
       }
     }
 
     onUpdate(updatedMatch);
     setRecordingTeam(null);
+  };
+
+  const handleTimeoutUsed = (team: Team) => {
+    const newTimeout: TimeoutEvent = {
+      id: Date.now().toString(),
+      timestamp: Date.now(),
+      team,
+      pointIndex: currentSet.events.length,
+      ourScore: currentSet.ourScore,
+      opponentScore: currentSet.opponentScore,
+    };
+
+    const updatedSet = {
+      ...currentSet,
+      timeouts: [...(currentSet.timeouts ?? []), newTimeout],
+    };
+
+    const updatedMatch = { ...match };
+    updatedMatch.sets = [...match.sets];
+    updatedMatch.sets[match.currentSetIndex] = updatedSet;
+
+    onUpdate(updatedMatch);
+    setIsTimeoutPromptOpen(false);
   };
 
   const undoLastPoint = () => {
@@ -115,7 +139,8 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
     if (lastEvent.scoringTeam === 'us') currentSet.ourScore--;
     else currentSet.opponentScore--;
     
-    currentSet.events.pop();
+    currentSet.events = currentSet.events.slice(0, -1);
+    currentSet.timeouts = (currentSet.timeouts ?? []).filter(timeout => timeout.pointIndex <= currentSet.events.length);
     updatedMatch.sets[match.currentSetIndex] = currentSet;
     onUpdate(updatedMatch);
   };
@@ -173,6 +198,9 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
         <button className="secondary" onClick={() => setIsSwapped(!isSwapped)}>
           <ArrowLeftRight size={18} /> {t.live.swapSides}
         </button>
+        <button className="secondary" onClick={() => setIsTimeoutPromptOpen(true)}>
+          <Timer size={18} /> {t.live.timeout}
+        </button>
       </div>
 
       {recordingTeam && (
@@ -182,6 +210,27 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
           onConfirm={onConfirmRecording}
           onCancel={() => setRecordingTeam(null)}
         />
+      )}
+
+      {isTimeoutPromptOpen && (
+        <div className="modal-overlay" onClick={() => setIsTimeoutPromptOpen(false)}>
+          <div className="modal-content" onClick={(event) => event.stopPropagation()}>
+            <h2>{t.live.timeoutTitle}</h2>
+            <p>{t.live.timeoutPrompt}</p>
+            <div className="button-grid">
+              {displayedTeams.map(team => (
+                <button key={team.key} onClick={() => handleTimeoutUsed(team.key)}>
+                  {team.name}
+                </button>
+              ))}
+            </div>
+            <div className="modal-footer">
+              <button className="text-button" onClick={() => setIsTimeoutPromptOpen(false)}>
+                {t.common.cancel}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

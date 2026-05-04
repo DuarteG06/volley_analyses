@@ -16,6 +16,7 @@ export const pt: Translations = {
     button: "Últimas atualizações",
     title: "Atualizações recentes",
     items: [
+      "Timeouts",
       "Faltas",
       "Opção de ponto por amorti",
       "Novo gráfico de pontos por set",
@@ -52,6 +53,9 @@ export const pt: Translations = {
     point: "PONTO",
     undoLast: "Anular Último Ponto",
     swapSides: "Trocar de Campo",
+    timeout: "Timeout",
+    timeoutTitle: "Timeout",
+    timeoutPrompt: "Que equipa usou o timeout?",
   },
   recording: {
     ourPoint: "Nosso Ponto!",
@@ -103,6 +107,8 @@ export const pt: Translations = {
     scoreAfterPoint: "Resultado após o ponto",
     setFlowXAxis: "Pontos jogados no set",
     setFlowYAxis: "Pontuação até ao total vencedor",
+    timeoutLabel: "Timeout",
+    timeoutCalledBy: "Timeout pedido por",
     detailedStats: "Estatísticas Detalhadas",
     blocks: "Blocos",
     blockOuts: "Blocos Fora",
