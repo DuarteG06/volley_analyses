@@ -50,6 +50,17 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
   ];
 
   const displayedTeams = isSwapped ? [...teams].reverse() : teams;
+  const currentSetTimeouts = currentSet.timeouts ?? [];
+  const currentPointIndex = currentSet.events.length;
+
+  const canCallTimeout = (team: Team) => {
+    const teamTimeouts = currentSetTimeouts.filter(timeout => timeout.team === team);
+    const alreadyCalledThisPoint = teamTimeouts.some(timeout => timeout.pointIndex === currentPointIndex);
+
+    return teamTimeouts.length < 2 && !alreadyCalledThisPoint;
+  };
+
+  const canAnyTeamCallTimeout = teams.some(team => canCallTimeout(team.key));
 
   const handlePointScored = (team: Team) => {
     setRecordingTeam(team);
@@ -99,11 +110,15 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
   };
 
   const handleTimeoutUsed = (team: Team) => {
+    if (!canCallTimeout(team)) {
+      return;
+    }
+
     const newTimeout: TimeoutEvent = {
       id: Date.now().toString(),
       timestamp: Date.now(),
       team,
-      pointIndex: currentSet.events.length,
+      pointIndex: currentPointIndex,
       ourScore: currentSet.ourScore,
       opponentScore: currentSet.opponentScore,
     };
@@ -198,7 +213,7 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
         <button className="secondary" onClick={() => setIsSwapped(!isSwapped)}>
           <ArrowLeftRight size={18} /> {t.live.swapSides}
         </button>
-        <button className="secondary" onClick={() => setIsTimeoutPromptOpen(true)}>
+        <button className="secondary" onClick={() => setIsTimeoutPromptOpen(true)} disabled={!canAnyTeamCallTimeout}>
           <Timer size={18} /> {t.live.timeout}
         </button>
       </div>
@@ -219,7 +234,7 @@ const LiveMatch: FC<Props> = ({ match, onUpdate, onReset }) => {
             <p>{t.live.timeoutPrompt}</p>
             <div className="button-grid">
               {displayedTeams.map(team => (
-                <button key={team.key} onClick={() => handleTimeoutUsed(team.key)}>
+                <button key={team.key} onClick={() => handleTimeoutUsed(team.key)} disabled={!canCallTimeout(team.key)}>
                   {team.name}
                 </button>
               ))}
